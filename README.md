@@ -89,7 +89,7 @@ all other robustness scripts. Some of those scripts need the internet
 
 ---
 
-## 4. Full rebuild from raw GDELT data (optional)
+## Full rebuild from raw GDELT data (optional)
 
 You need this only if you want to rebuild the files (size: 348 files, about 2.4 GB in total) in
 `data/intermediate/` yourself.
