@@ -1,0 +1,65 @@
+exploratory: press freedom interaction
+v-dem file: vdem_filtered.csv
+aid file: N = 102
+N with days: 95, N with valid aid: 100
+matched rows with an iso3 country: 11833
+N with unique-url attention share: 102
+baseline: table 3 beta_hat -0.1695, N 93, hc3 se 0.0551; attention (per 1,000) beta_hat 0.224, N 100, hc3 p 0.0002
+baseline matches
+v-dem rows in 2018-2022: 716, years present: [2018, 2019, 2020, 2021]
+N with v2mecenefm: 101
+N with v2meharjrn: 101
+
+days (log 1+days) | moderator a: censorship effort (high = less censorship): N = 92, mean = 0.2004, p10 = -1.6923, p90 = 1.5447
+  p1: aid -0.1805 (p 0.0057), aid x moderator -0.0266 (p 0.4148), N 92
+  p2: aid -0.0870 (p 0.1633), aid x moderator -0.0041 (p 0.8966), N 92
+
+days (log 1+days) | moderator b: journalist harassment (high = less harassment): N = 92, mean = 0.1718, p10 = -1.1273, p90 = 1.2488
+  p1: aid -0.1699 (p 0.0087), aid x moderator -0.0006 (p 0.9864), N 92
+  p2: aid -0.0901 (p 0.1306), aid x moderator -0.0056 (p 0.9034), N 92
+
+attention, unique url (per 1,000) | moderator a: censorship effort (high = less censorship): N = 99, mean = 0.1989, p10 = -1.6976, p90 = 1.5870
+  p1: aid +0.2347 (p 0.0001), aid x moderator +0.0276 (p 0.6136), N 99
+  p2: aid +0.3419 (p 0.0000), aid x moderator +0.0542 (p 0.1914), N 99
+
+attention, unique url (per 1,000) | moderator b: journalist harassment (high = less harassment): N = 99, mean = 0.1859, p10 = -1.1423, p90 = 1.2952
+  p1: aid +0.2495 (p 0.0001), aid x moderator +0.0752 (p 0.2191), N 99
+  p2: aid +0.3285 (p 0.0000), aid x moderator +0.0727 (p 0.1659), N 99
+
+results:
+                          outcome                                                                                       model  N beta_hat           se_type     se      p     r2
+                days (log 1+days)          p1, moderator a: censorship effort (high = less censorship): aid at mean moderator 92  -0.1805               HC3 0.0653 0.0057 0.1751
+                days (log 1+days)                p1, moderator a: censorship effort (high = less censorship): aid x moderator 92  -0.0266               HC3 0.0327 0.4148 0.1751
+                days (log 1+days)     p1, moderator a: censorship effort (high = less censorship): aid slope at moderator p10 92  -0.1300 HC3 (t, df resid) 0.0574 0.0260 0.1751
+                days (log 1+days)     p1, moderator a: censorship effort (high = less censorship): aid slope at moderator p90 92  -0.2163 HC3 (t, df resid) 0.0979 0.0298 0.1751
+                days (log 1+days)          p2, moderator a: censorship effort (high = less censorship): aid at mean moderator 92  -0.0870               HC3 0.0624 0.1633 0.3605
+                days (log 1+days)                p2, moderator a: censorship effort (high = less censorship): aid x moderator 92  -0.0041               HC3 0.0312 0.8966 0.3605
+                days (log 1+days)     p2, moderator a: censorship effort (high = less censorship): aid slope at moderator p10 92  -0.0793 HC3 (t, df resid) 0.0551 0.1531 0.3605
+                days (log 1+days)     p2, moderator a: censorship effort (high = less censorship): aid slope at moderator p90 92  -0.0925 HC3 (t, df resid) 0.0936 0.3256 0.3605
+                days (log 1+days)      p1, moderator b: journalist harassment (high = less harassment): aid at mean moderator 92  -0.1699               HC3 0.0648 0.0087 0.1650
+                days (log 1+days)            p1, moderator b: journalist harassment (high = less harassment): aid x moderator 92  -0.0006               HC3 0.0372 0.9864 0.1650
+                days (log 1+days) p1, moderator b: journalist harassment (high = less harassment): aid slope at moderator p10 92  -0.1691 HC3 (t, df resid) 0.0554 0.0030 0.1650
+                days (log 1+days) p1, moderator b: journalist harassment (high = less harassment): aid slope at moderator p90 92  -0.1706 HC3 (t, df resid) 0.0931 0.0702 0.1650
+                days (log 1+days)      p2, moderator b: journalist harassment (high = less harassment): aid at mean moderator 92  -0.0901               HC3 0.0596 0.1306 0.3594
+                days (log 1+days)            p2, moderator b: journalist harassment (high = less harassment): aid x moderator 92  -0.0056               HC3 0.0466 0.9034 0.3594
+                days (log 1+days) p2, moderator b: journalist harassment (high = less harassment): aid slope at moderator p10 92  -0.0828 HC3 (t, df resid) 0.0717 0.2514 0.3594
+                days (log 1+days) p2, moderator b: journalist harassment (high = less harassment): aid slope at moderator p90 92  -0.0962 HC3 (t, df resid) 0.0882 0.2785 0.3594
+attention, unique url (per 1,000)          p1, moderator a: censorship effort (high = less censorship): aid at mean moderator 99   0.2347               HC3 0.0605 0.0001 0.1369
+attention, unique url (per 1,000)                p1, moderator a: censorship effort (high = less censorship): aid x moderator 99   0.0276               HC3 0.0546 0.6136 0.1369
+attention, unique url (per 1,000)     p1, moderator a: censorship effort (high = less censorship): aid slope at moderator p10 99   0.1824 HC3 (t, df resid) 0.1195 0.1301 0.1369
+attention, unique url (per 1,000)     p1, moderator a: censorship effort (high = less censorship): aid slope at moderator p90 99   0.2730 HC3 (t, df resid) 0.0974 0.0061 0.1369
+attention, unique url (per 1,000)          p2, moderator a: censorship effort (high = less censorship): aid at mean moderator 99   0.3419               HC3 0.0723 0.0000 0.2333
+attention, unique url (per 1,000)                p2, moderator a: censorship effort (high = less censorship): aid x moderator 99   0.0542               HC3 0.0415 0.1914 0.2333
+attention, unique url (per 1,000)     p2, moderator a: censorship effort (high = less censorship): aid slope at moderator p10 99   0.2392 HC3 (t, df resid) 0.0906 0.0097 0.2333
+attention, unique url (per 1,000)     p2, moderator a: censorship effort (high = less censorship): aid slope at moderator p90 99   0.4171 HC3 (t, df resid) 0.1043 0.0001 0.2333
+attention, unique url (per 1,000)      p1, moderator b: journalist harassment (high = less harassment): aid at mean moderator 99   0.2495               HC3 0.0626 0.0001 0.1579
+attention, unique url (per 1,000)            p1, moderator b: journalist harassment (high = less harassment): aid x moderator 99   0.0752               HC3 0.0612 0.2191 0.1579
+attention, unique url (per 1,000) p1, moderator b: journalist harassment (high = less harassment): aid slope at moderator p10 99   0.1496 HC3 (t, df resid) 0.0974 0.1279 0.1579
+attention, unique url (per 1,000) p1, moderator b: journalist harassment (high = less harassment): aid slope at moderator p90 99   0.3330 HC3 (t, df resid) 0.0970 0.0009 0.1579
+attention, unique url (per 1,000)      p2, moderator b: journalist harassment (high = less harassment): aid at mean moderator 99   0.3285               HC3 0.0712 0.0000 0.2320
+attention, unique url (per 1,000)            p2, moderator b: journalist harassment (high = less harassment): aid x moderator 99   0.0727               HC3 0.0525 0.1659 0.2320
+attention, unique url (per 1,000) p2, moderator b: journalist harassment (high = less harassment): aid slope at moderator p10 99   0.2319 HC3 (t, df resid) 0.0906 0.0121 0.2320
+attention, unique url (per 1,000) p2, moderator b: journalist harassment (high = less harassment): aid slope at moderator p90 99   0.4091 HC3 (t, df resid) 0.0995 0.0001 0.2320
+
+models run: 8 (each gives 4 rows: aid at mean, interaction, slope at p10, slope at p90)
+files written to exploratory/press_freedom/

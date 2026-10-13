@@ -1,0 +1,51 @@
+exploratory: coverage intensity
+aid file: N = 102
+matched rows: 12017
+matched rows with an iso3 country: 11833
+baseline: table 3 beta_hat -0.1695, N 93, hc3 se 0.0551; attention (per 1,000) beta_hat 0.224, N 100, hc3 p 0.0002
+baseline matches
+
+row-level distribution (N = 11833 rows):
+          nummentions  numsources  numarticles
+p0               1.00        1.00         1.00
+p1               1.00        1.00         1.00
+p25              2.00        1.00         2.00
+p50              5.00        1.00         5.00
+p75             10.00        1.00        10.00
+p90             20.00        3.00        20.00
+p99            257.36       51.68       255.04
+p100          3118.00      343.00      3118.00
+mean            15.69        3.22        15.48
+skewness        18.18       11.95        18.29
+
+unique (country, url) pairs: 3966
+table 3 sample with matched urls: N = 93
+
+country-level distribution (N = 93):
+                 count    mean     std    min    10%    25%    50%     75%     90%      max  skewness
+nummentions       93.0  11.127   9.337  1.833  3.317  5.857  8.154  11.995  22.162   45.424     2.202
+numsources        93.0   2.088   1.915  1.000  1.000  1.000  1.395   2.491   3.290   11.100     3.242
+numarticles       93.0  10.999   9.332  1.833  3.317  5.778  8.083  11.741  21.982   45.392     2.226
+log_nummentions   93.0   2.152   0.703  0.606  1.198  1.768  2.099   2.484   3.096    3.816     0.239
+log_numsources    93.0   0.515   0.592  0.000  0.000  0.000  0.333   0.913   1.191    2.407     1.298
+log_numarticles   93.0   2.138   0.703  0.606  1.198  1.754  2.090   2.463   3.088    3.815     0.279
+n_urls            93.0  19.925  27.004  1.000  1.200  3.000  8.000  27.000  46.000  124.000     2.234
+countries with n_urls >= 5: 57
+
+results:
+             outcome                        model  N beta_hat se_type     se      p     r2
+log mean nummentions                    i1: plain 93   0.1189     HC3 0.0358 0.0009 0.0854
+log mean nummentions     i2: + log_total_articles 93   0.0663     HC3 0.0419 0.1135 0.1770
+log mean nummentions i3: weighted by n_urls (wls) 93  -0.0294     HC3 0.0737 0.6900 0.0053
+log mean nummentions              i4: n_urls >= 5 57  -0.0396     HC3 0.0936 0.6728 0.0072
+ log mean numsources                    i1: plain 93   0.0998     HC3 0.0298 0.0008 0.0849
+ log mean numsources     i2: + log_total_articles 93   0.0542     HC3 0.0359 0.1318 0.1821
+ log mean numsources i3: weighted by n_urls (wls) 93  -0.0510     HC3 0.0765 0.5050 0.0174
+ log mean numsources              i4: n_urls >= 5 57  -0.0501     HC3 0.0910 0.5814 0.0118
+log mean numarticles                    i1: plain 93   0.1227     HC3 0.0352 0.0005 0.0909
+log mean numarticles     i2: + log_total_articles 93   0.0699     HC3 0.0412 0.0899 0.1830
+log mean numarticles i3: weighted by n_urls (wls) 93  -0.0275     HC3 0.0743 0.7109 0.0047
+log mean numarticles              i4: n_urls >= 5 57  -0.0353     HC3 0.0928 0.7035 0.0056
+
+models run: 12
+files written to exploratory/coverage_intensity/

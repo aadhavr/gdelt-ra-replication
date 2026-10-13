@@ -1,0 +1,23 @@
+data/raw/*.zip
+.venv
+__pycache__
+.DS_Store
+*.log
+
+# third-party data: not redistributed (see the readme)
+data/raw/V-Dem*
+data/raw/Country_Year_V-Dem*/
+data/raw/Idealpoint*
+data/raw/Codebook_IdealPoint*
+data/input/vdem_filtered.csv
+data/input/idealpoint_filtered.csv
+data/input/V-Dem*
+data/input/Idealpoint*
+
+# large files: .gitignore cannot select files by size. data/raw/ holds only
+# downloads, so everything in it is ignored except these two files:
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/MANIFEST.csv
+# data/input/ cannot be covered by a size rule. before `git add`, run:
+#   find data -type f -size +25000k
