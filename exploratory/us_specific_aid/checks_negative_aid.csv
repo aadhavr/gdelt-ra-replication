@@ -1,0 +1,5 @@
+ISO3,us_aid_m,us_loans_m,total_oda_m,gdp_avg,us_gdp,oda_gdp,us_oda_share,usaid_articles,usaid_articles_unique,reason
+EGY,-23.7,-230.6,3998.6,373300955076.8048,-6.348764898049576e-05,0.01071146469254896,-0.005927074476066624,94.0,23.0,net US aid <= 0
+SSD,836.0,,2019.2,,,,0.4140253565768621,103.0,30.0,no gdp_avg in wdi snapshot
+ERI,0.2,,113.3,,,,0.00176522506619594,3.0,2.0,no gdp_avg in wdi snapshot
+GAB,-1.2,,109.7,17793911764.76204,-6.743879681231227e-05,0.006165030008592213,-0.010938924339106653,1.0,1.0,net US aid <= 0

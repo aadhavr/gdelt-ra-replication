@@ -75,6 +75,11 @@ and its logic is unchanged.
 | `exploratory/coverage_intensity/PREDICTIONS.md` | exploratory: predictions, written before the models ran |
 | `exploratory/coverage_intensity/run_coverage_intensity.py` | exploratory: coverage intensity (not in the paper) |
 | `exploratory/coverage_intensity/results.csv`, `exploratory/coverage_intensity/log.txt` | exploratory: outputs of `run_coverage_intensity.py` |
+| `exploratory/us_specific_aid/run_us_specific_aid.py` | exploratory: US-specific vs general aid dependency (not in the paper). From `usaid_aid_dependency_replication/run_analysis.py`, a standalone extension received 2026-10-14. Changed only: paths from `config.py`, outputs to its folder, `log.txt` |
+| `exploratory/us_specific_aid/README.md` | exploratory: the extension's README (specification and caveats), with run instructions for this repo |
+| `exploratory/us_specific_aid/us_specific_results.csv`, `exploratory/us_specific_aid/analysis_sample.csv`, `exploratory/us_specific_aid/log.txt` | exploratory: outputs of `run_us_specific_aid.py`. Results are byte-identical to the unmodified `run_analysis.py` on this repo, and match the extension's shipped `results/us_specific_results.csv` to 4.4e-13 (relative) |
+| `exploratory/us_specific_aid/run_us_specific_aid_checks.py` | exploratory: new follow-up checks on the extension (unique-URL counts, collinearity and joint test, negative net aid) |
+| `exploratory/us_specific_aid/checks_results.csv`, `checks_collinearity.csv`, `checks_negative_aid.csv`, `checks_log.txt` | exploratory: outputs of `run_us_specific_aid_checks.py` |
 
 A first version of `04b` (outcomes from `country_reaction_dataset.csv`)
 did not match exactly (3 cells, 0.000001).

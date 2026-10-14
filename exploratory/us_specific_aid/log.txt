@@ -1,0 +1,14 @@
+exploratory: us-specific vs general aid dependency
+Common sample: 98 countries; matched events: 5700
+Note: GLM NegativeBinomial alpha=1 FIXED; HC3 robust standard errors; log(total events) offset.
+Log measures exclude zero/negative inputs; all models use the same complete-case sample.
+US aid/GDP: N=98; log_us_gdp=0.356 (p=5.169e-13)
+Total ODA/GDP: N=98; log_oda_gdp=0.316 (p=1.8e-06)
+US share of ODA: N=98; log_us_oda_share=0.386 (p=0.0007321)
+US aid/GDP + total ODA/GDP: N=98; log_us_gdp=0.400 (p=1.133e-05), log_oda_gdp=-0.064 (p=0.5472)
+Total ODA/GDP + US share of ODA: N=98; log_oda_gdp=0.336 (p=2.957e-09), log_us_oda_share=0.400 (p=1.133e-05)
+US aid/GDP + absolute US aid: N=98; log_us_gdp=0.340 (p=2.908e-08), log_us_aid=0.031 (p=0.6882)
+US aid/GDP + total ODA/GDP + absolute US aid: N=98; log_us_gdp=0.396 (p=0.007278), log_oda_gdp=-0.060 (p=0.6709), log_us_aid=0.003 (p=0.9736)
+Restricted >=5 matched EVENT ROWS: US aid/GDP + total ODA/GDP: N=78; log_us_gdp=0.308 (p=0.0006865), log_oda_gdp=0.017 (p=0.8691)
+Restricted >=5 matched EVENT ROWS: US aid/GDP + absolute US aid: N=78; log_us_gdp=0.339 (p=1.116e-08), log_us_aid=-0.040 (p=0.5926)
+files written to exploratory/us_specific_aid/

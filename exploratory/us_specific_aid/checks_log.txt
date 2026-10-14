@@ -1,0 +1,80 @@
+exploratory: us-specific aid dependency, follow-up checks
+aid file: N = 102; countries where matched rows from matches_rows.csv != usaid_articles in country_reaction_dataset.csv: 0
+
+(3) NONPOSITIVE OR MISSING INPUTS
+source sheet: OECD DAC2A measure 206, net ODA disbursements (2018-2022 average). net = gross minus repayments,
+so it can be negative. np.log of a nonpositive ratio is set to missing, so the country leaves the sample.
+ISO3  us_aid_m  us_loans_m  total_oda_m      gdp_avg    us_gdp  oda_gdp  us_oda_share  usaid_articles  usaid_articles_unique                     reason
+ EGY     -23.7      -230.6       3998.6 3.733010e+11 -0.000063 0.010711     -0.005927            94.0                   23.0            net US aid <= 0
+ SSD     836.0         NaN       2019.2          NaN       NaN      NaN      0.414025           103.0                   30.0 no gdp_avg in wdi snapshot
+ ERI       0.2         NaN        113.3          NaN       NaN      NaN      0.001765             3.0                    2.0 no gdp_avg in wdi snapshot
+ GAB      -1.2         NaN        109.7 1.779391e+10 -0.000067 0.006165     -0.010939             1.0                    1.0            net US aid <= 0
+total ODA <= 0 in the aid file: 0 countries
+negative US aid makes us_gdp and us_oda_share negative (and log_us_aid undefined); total ODA is positive,
+so log_oda_gdp is defined for these countries, but the common complete-case sample drops them from every model.
+sensitivity: nonpositive US aid bottom-coded at the smallest positive value, 0.7 (USD millions)
+
+=== event rows | as published (drop nonpositive): common sample 98 countries; matched event rows: 5700
+GLM NegativeBinomial alpha=1 FIXED; HC3 robust standard errors; log(total event rows) offset.
+US aid/GDP: N=98; log_us_gdp=0.356 (p=5.169e-13)
+Total ODA/GDP: N=98; log_oda_gdp=0.316 (p=1.8e-06)
+US share of ODA: N=98; log_us_oda_share=0.386 (p=0.0007321)
+US aid/GDP + total ODA/GDP: N=98; log_us_gdp=0.400 (p=1.133e-05), log_oda_gdp=-0.064 (p=0.5472)
+Total ODA/GDP + US share of ODA: N=98; log_oda_gdp=0.336 (p=2.957e-09), log_us_oda_share=0.400 (p=1.133e-05)
+US aid/GDP + absolute US aid: N=98; log_us_gdp=0.340 (p=2.908e-08), log_us_aid=0.031 (p=0.6882)
+US aid/GDP + total ODA/GDP + absolute US aid: N=98; log_us_gdp=0.396 (p=0.007278), log_oda_gdp=-0.060 (p=0.6709), log_us_aid=0.003 (p=0.9736)
+Restricted >=5 matched EVENT ROWS: US aid/GDP + total ODA/GDP: N=78; log_us_gdp=0.308 (p=0.0006865), log_oda_gdp=0.017 (p=0.8691)
+Restricted >=5 matched EVENT ROWS: US aid/GDP + absolute US aid: N=78; log_us_gdp=0.339 (p=1.116e-08), log_us_aid=-0.040 (p=0.5926)
+  collinearity, full (N=98): r(log US aid/GDP, log total ODA/GDP) = 0.841, spearman = 0.819, VIF = 3.41; joint HC3 Wald test both = 0: chi2(2) = 53.36, p = 2.59e-12
+  collinearity, restricted >=5 matched EVENT ROWS (N=78): r(log US aid/GDP, log total ODA/GDP) = 0.858, spearman = 0.845, VIF = 3.78; joint HC3 Wald test both = 0: chi2(2) = 41.93, p = 7.85e-10
+
+=== event rows | bottom-coded US aid: common sample 100 countries; matched event rows: 5795
+GLM NegativeBinomial alpha=1 FIXED; HC3 robust standard errors; log(total event rows) offset.
+US aid/GDP: N=100; log_us_gdp=0.269 (p=1.915e-06)
+Total ODA/GDP: N=100; log_oda_gdp=0.319 (p=1.328e-06)
+US share of ODA: N=100; log_us_oda_share=0.252 (p=0.001121)
+US aid/GDP + total ODA/GDP: N=100; log_us_gdp=0.226 (p=0.003709), log_oda_gdp=0.094 (p=0.3328)
+Total ODA/GDP + US share of ODA: N=100; log_oda_gdp=0.320 (p=7.256e-08), log_us_oda_share=0.226 (p=0.003709)
+US aid/GDP + absolute US aid: N=100; log_us_gdp=0.265 (p=0.0001228), log_us_aid=0.006 (p=0.9315)
+US aid/GDP + total ODA/GDP + absolute US aid: N=100; log_us_gdp=0.148 (p=0.2515), log_oda_gdp=0.159 (p=0.1987), log_us_aid=0.084 (p=0.4083)
+Restricted >=5 matched EVENT ROWS: US aid/GDP + total ODA/GDP: N=79; log_us_gdp=0.185 (p=0.005164), log_oda_gdp=0.129 (p=0.1387)
+Restricted >=5 matched EVENT ROWS: US aid/GDP + absolute US aid: N=79; log_us_gdp=0.283 (p=5.657e-06), log_us_aid=-0.065 (p=0.382)
+  collinearity, full (N=100): r(log US aid/GDP, log total ODA/GDP) = 0.796, spearman = 0.816, VIF = 2.73; joint HC3 Wald test both = 0: chi2(2) = 36.51, p = 1.18e-08
+  collinearity, restricted >=5 matched EVENT ROWS (N=79): r(log US aid/GDP, log total ODA/GDP) = 0.805, spearman = 0.841, VIF = 2.84; joint HC3 Wald test both = 0: chi2(2) = 35.51, p = 1.94e-08
+
+=== unique urls | as published (drop nonpositive): common sample 98 countries; matched unique urls: 1821
+GLM NegativeBinomial alpha=1 FIXED; HC3 robust standard errors; log(total unique urls) offset.
+US aid/GDP: N=98; log_us_gdp=0.342 (p=2.859e-16)
+Total ODA/GDP: N=98; log_oda_gdp=0.290 (p=1.304e-06)
+US share of ODA: N=98; log_us_oda_share=0.437 (p=6.521e-05)
+US aid/GDP + total ODA/GDP: N=98; log_us_gdp=0.433 (p=9.025e-07), log_oda_gdp=-0.123 (p=0.2417)
+Total ODA/GDP + US share of ODA: N=98; log_oda_gdp=0.310 (p=1.783e-10), log_us_oda_share=0.433 (p=9.025e-07)
+US aid/GDP + absolute US aid: N=98; log_us_gdp=0.310 (p=7.293e-10), log_us_aid=0.065 (p=0.4054)
+US aid/GDP + total ODA/GDP + absolute US aid: N=98; log_us_gdp=0.411 (p=0.0003298), log_oda_gdp=-0.105 (p=0.3892), log_us_aid=0.018 (p=0.8472)
+Restricted >=5 matched UNIQUE URLS: US aid/GDP + total ODA/GDP: N=56; log_us_gdp=0.277 (p=0.07203), log_oda_gdp=0.031 (p=0.8569)
+Restricted >=5 matched UNIQUE URLS: US aid/GDP + absolute US aid: N=56; log_us_gdp=0.391 (p=5.744e-10), log_us_aid=-0.205 (p=0.06371)
+  collinearity, full (N=98): r(log US aid/GDP, log total ODA/GDP) = 0.841, spearman = 0.819, VIF = 3.41; joint HC3 Wald test both = 0: chi2(2) = 72.15, p = 2.15e-16
+  collinearity, restricted >=5 matched UNIQUE URLS (N=56): r(log US aid/GDP, log total ODA/GDP) = 0.921, spearman = 0.942, VIF = 6.57; joint HC3 Wald test both = 0: chi2(2) = 34.28, p = 3.59e-08
+
+=== unique urls | bottom-coded US aid: common sample 100 countries; matched unique urls: 1845
+GLM NegativeBinomial alpha=1 FIXED; HC3 robust standard errors; log(total unique urls) offset.
+US aid/GDP: N=100; log_us_gdp=0.282 (p=3.473e-10)
+Total ODA/GDP: N=100; log_oda_gdp=0.292 (p=1.058e-06)
+US share of ODA: N=100; log_us_oda_share=0.290 (p=5.231e-05)
+US aid/GDP + total ODA/GDP: N=100; log_us_gdp=0.267 (p=0.0002151), log_oda_gdp=0.029 (p=0.7464)
+Total ODA/GDP + US share of ODA: N=100; log_oda_gdp=0.296 (p=1.143e-08), log_us_oda_share=0.267 (p=0.0002151)
+US aid/GDP + absolute US aid: N=100; log_us_gdp=0.262 (p=2.392e-06), log_us_aid=0.034 (p=0.6364)
+US aid/GDP + total ODA/GDP + absolute US aid: N=100; log_us_gdp=0.194 (p=0.08285), log_oda_gdp=0.085 (p=0.4514), log_us_aid=0.077 (p=0.416)
+Restricted >=5 matched UNIQUE URLS: US aid/GDP + total ODA/GDP: N=57; log_us_gdp=0.193 (p=0.0008728), log_oda_gdp=0.113 (p=0.2014)
+Restricted >=5 matched UNIQUE URLS: US aid/GDP + absolute US aid: N=57; log_us_gdp=0.380 (p=9.526e-10), log_us_aid=-0.228 (p=0.01757)
+  collinearity, full (N=100): r(log US aid/GDP, log total ODA/GDP) = 0.796, spearman = 0.816, VIF = 2.73; joint HC3 Wald test both = 0: chi2(2) = 47.79, p = 4.2e-11
+  collinearity, restricted >=5 matched UNIQUE URLS (N=57): r(log US aid/GDP, log total ODA/GDP) = 0.842, spearman = 0.930, VIF = 3.43; joint HC3 Wald test both = 0: chi2(2) = 41.09, p = 1.2e-09
+
+correlation matrix of the log regressors (published sample, N = 98):
+                  log_us_gdp  log_oda_gdp  log_us_oda_share  log_us_aid
+log_us_gdp             1.000        0.841             0.495       0.587
+log_oda_gdp            0.841        1.000            -0.054       0.205
+log_us_oda_share       0.495       -0.054             1.000       0.754
+log_us_aid             0.587        0.205             0.754       1.000
+identity check: max |log_us_gdp - log_oda_gdp - log_us_oda_share| = 8.88e-16 (so the 'US aid/GDP + total ODA/GDP' and 'total ODA/GDP + US share' models are the same model)
+files written to exploratory/us_specific_aid/

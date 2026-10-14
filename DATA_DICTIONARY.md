@@ -282,3 +282,65 @@ counts for one article. The GDELT 1.0 codebook is not in this project,
 so the time window that these counts cover is not confirmed here. In the
 11,833 matched rows with a country, the medians are 5, 1 and 5 and the
 maximums are 3,118, 343 and 3,118 (skewness 18.2, 12.0 and 18.3).
+
+## 7. Exploratory: US-specific aid dependency (`exploratory/us_specific_aid/`)
+
+Made by `run_us_specific_aid.py`. Specification: see the README.md in
+that folder. Explanatory variables (natural logs; values <= 0 are dropped):
+
+| Variable | Definition |
+|---|---|
+| `log_us_gdp` | log(US aid ÷ GDP): `us_oda_disbursements` (USD millions, section 1.1) × 1,000,000 ÷ `gdp_avg` (USD, section 1.4) |
+| `log_oda_gdp` | log(total ODA ÷ GDP): `Avg Annual ODA Received ($M)` (section 1.2) × 1,000,000 ÷ `gdp_avg` |
+| `log_us_oda_share` | log(US aid ÷ total ODA) |
+| `log_us_aid` | log(US aid, USD millions) |
+
+### 7.1 `us_specific_results.csv` (16 rows: one per model and variable)
+
+| Column | Unit / meaning |
+|---|---|
+| `model` | model label; rows starting `Restricted >=5 matched EVENT ROWS` use only countries with `usaid_articles` >= 5 |
+| `n` | number of countries (98 full sample, 78 restricted) |
+| `variable` | explanatory variable (the intercept is not reported) |
+| `beta` | negative-binomial GLM coefficient (alpha fixed at 1, offset log `total_articles`): change in log expected matched rows per one unit of the log variable |
+| `se` | HC3 standard error of `beta` |
+| `p` | two-sided p-value (normal) |
+| `ci_low`, `ci_high` | 95% confidence interval of `beta` |
+| `aic` | AIC of the model (the same on all its rows) |
+
+### 7.2 `analysis_sample.csv` (98 rows: the complete-case sample)
+
+`ISO3`; `usaid_articles` and `total_articles` (GDELT row counts from
+section 3.2); `log_volume` = log `total_articles` (the offset); and the
+four log variables above.
+
+### 7.3 `checks_results.csv` (made by `run_us_specific_aid_checks.py`)
+
+Same columns as section 7.1, plus:
+
+| Column | Unit / meaning |
+|---|---|
+| `count_type` | `event rows` (outcome `usaid_articles`, offset log `total_articles`) or `unique urls` (outcome = unique matched URLs, offset log `total_articles_unique_url`) |
+| `aid_values` | `as published (drop nonpositive)` or `bottom-coded US aid` (US aid <= 0 set to the smallest positive value in the sample, 0.7 USD millions) |
+
+Restricted rows use >= 5 of the `count_type` (event rows or unique URLs).
+
+### 7.4 `checks_collinearity.csv`
+
+| Column | Unit / meaning |
+|---|---|
+| `count_type`, `aid_values` | as in section 7.3 |
+| `sample` | `full`, or the >= 5 restricted sample |
+| `n` | number of countries |
+| `pearson_r`, `spearman_rho` | correlation of `log_us_gdp` and `log_oda_gdp` in that sample |
+| `vif` | 1 / (1 - `pearson_r`^2), the VIF of either variable in the two-variable model |
+| `joint_wald_chi2`, `joint_wald_df`, `joint_wald_p` | HC3 Wald test that both coefficients are 0 in the model `US aid/GDP + total ODA/GDP` (chi-squared, 2 df) |
+
+### 7.5 `checks_negative_aid.csv` (the 4 countries outside the 98-country sample)
+
+`ISO3`; `us_aid_m` (US net ODA, USD millions); `us_loans_m` (`US Avg Annual
+ODA Loans ($M)` from the source sheet); `total_oda_m` (USD millions);
+`gdp_avg` (USD); the ratios `us_gdp`, `oda_gdp`, `us_oda_share` before logs;
+`usaid_articles` (event rows); `usaid_articles_unique` (unique URLs);
+`reason` (why the country is excluded).
+

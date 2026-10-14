@@ -27,7 +27,8 @@ data/
 src/                   the main pipeline, numbered in run order (00 to 05)
 robustness/            robustness checks and build_all.py, the final table builder
 outputs/               empty in the repo; every script writes its results here
-exploratory/           exploratory checks that are not in the paper (tone and goldstein)
+exploratory/           exploratory checks that are not in the paper (tone and goldstein,
+                       press freedom, coverage intensity, US-specific aid dependency)
 ```
 
 ---
