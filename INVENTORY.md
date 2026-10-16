@@ -80,6 +80,12 @@ and its logic is unchanged.
 | `exploratory/us_specific_aid/us_specific_results.csv`, `exploratory/us_specific_aid/analysis_sample.csv`, `exploratory/us_specific_aid/log.txt` | exploratory: outputs of `run_us_specific_aid.py`. Results are byte-identical to the unmodified `run_analysis.py` on this repo, and match the extension's shipped `results/us_specific_results.csv` to 4.4e-13 (relative) |
 | `exploratory/us_specific_aid/run_us_specific_aid_checks.py` | exploratory: new follow-up checks on the extension (unique-URL counts, collinearity and joint test, negative net aid) |
 | `exploratory/us_specific_aid/checks_results.csv`, `checks_collinearity.csv`, `checks_negative_aid.csv`, `checks_log.txt` | exploratory: outputs of `run_us_specific_aid_checks.py` |
+| `gross_aid/SPEC.md` | gross aid: specification, written before any model ran (SHA-256 `1206e9d8c25e6f2d848bb47e44622df6a40f3eb03ef6e24f01753a9319501617`) |
+| `gross_aid/build_gross_aid.py` | gross aid: checks the two OECD files and merges gross US and DAC ODA (2018-2022 mean) onto the 102 sample countries |
+| `gross_aid/run_gross_aid.py` | gross aid: reproduces the net-aid baselines, then runs models G1 to G9 with net and gross aid |
+| `gross_aid/results.csv`, `gross_aid/side_by_side.csv`, `gross_aid/log.txt` | gross aid: outputs of the two scripts above |
+| `data/intermediate/aid_gross_2018_2022.csv` | gross aid: made by `build_gross_aid.py` (102 rows) |
+| `data/raw/oecd_gross_us_2018_2022.csv`, `data/raw/oecd_gross_dac_2018_2022.csv` | gross aid: OECD DAC2A downloads, not in the repo (`data/raw/` is ignored by git) |
 
 A first version of `04b` (outcomes from `country_reaction_dataset.csv`)
 did not match exactly (3 cells, 0.000001).

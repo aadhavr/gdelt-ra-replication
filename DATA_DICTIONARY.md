@@ -344,3 +344,50 @@ ODA Loans ($M)` from the source sheet); `total_oda_m` (USD millions);
 `usaid_articles` (event rows); `usaid_articles_unique` (unique URLs);
 `reason` (why the country is excluded).
 
+## 8. Gross aid (`gross_aid/`)
+
+### 8.1 `data/raw/oecd_gross_us_2018_2022.csv` and `oecd_gross_dac_2018_2022.csv` (NOT shipped)
+
+OECD DAC2A (`OECD.DCD.FSD:DSD_DAC2@DF_DAC2A(1.7)`), one row per recipient
+and year. Donor `USA` or `DAC` (DAC countries total); `MEASURE` 240 (gross
+ODA); `FLOW_TYPE` D (disbursements); `PRICE_BASE` Q (constant prices),
+`BASE_PER` 2024; `UNIT_MULT` 6 (USD millions); `TIME_PERIOD` 2018 to 2022;
+`RECIPIENT` = ISO3 code or an aggregate code; `OBS_VALUE` = the value.
+
+### 8.2 `data/intermediate/aid_gross_2018_2022.csv` (102 rows, one per sample country)
+
+| Column | Unit / meaning |
+|---|---|
+| `iso3`, `country` | from `3-29-v2_oda_data.csv` |
+| `us_gross_mean` | US gross ODA disbursements, constant 2024 USD millions: sum of 2018-2022 / 5 (a missing year counts as 0) |
+| `n_years_us` | number of years with a US row (IRN 2, ERI 3, all others 5) |
+| `dac_gross_mean` | the same for the DAC countries total |
+| `n_years_dac` | number of years with a DAC row (5 for all 102) |
+| `us_share` | `us_gross_mean` ÷ `dac_gross_mean` |
+| `us_net` | `us_oda_disbursements` of section 1.1, unchanged (net, USD millions, price base not known) |
+
+### 8.3 `gross_aid/results.csv` (28 rows: one per model, G8 has one row per coefficient)
+
+| Column | Unit / meaning |
+|---|---|
+| `model` | G1 to G9 (see `gross_aid/SPEC.md`) |
+| `aid_variable` | `US aid (USD millions) (net)`, `US aid (USD millions) (gross)`, `DAC aid (USD millions) (gross)` or `US share of DAC aid (gross)`; the regressor is its natural log |
+| `sample` | `net aid > 0`, `gross aid > 0`, or `net sample (net aid > 0)` (gross aid on the countries of the net sample) |
+| `outcome` | `log(1 + days to first article)`; `log(1 + unique-URL attention share)` (beta_hat and se per 1,000, as Table 4); Cox log-hazard of the first article; or unique matched URLs (negative binomial count) |
+| `N` | number of countries in the model |
+| `beta_hat` | coefficient of the log aid variable |
+| `se_type` | `HC3` (OLS), `Cox model-based`, or `model-based (MLE)` (negative binomial), as in Tables B2 and B3 |
+| `se` | standard error of `beta_hat` |
+| `p` | two-sided p-value |
+| `r2` | R-squared (OLS only, empty otherwise) |
+| `note` | aid definitions; the same on every row |
+
+### 8.4 `gross_aid/side_by_side.csv` (9 rows: G1 to G7)
+
+`model`, `outcome`, `se_type` as in section 8.3. Then `N`, `beta_hat`,
+`se`, `p`, `r2` three times, with the prefix `net_`, `gross_` and
+`gross_on_net_sample_` (the last only for G1 to G4).
+`sign_match_gross` and `sign_match_gross_on_net_sample`: True if the sign
+of that `beta_hat` is the same as the sign of `net_beta_hat`. `note` as in
+section 8.3.
+

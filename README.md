@@ -236,3 +236,38 @@ means computed by this project; they are not World Bank figures.
 `robustness/analysis.py`, `analysis2.py` and `analysis3.py` download WDI
 data again each time they run, so their results can change if the World
 Bank revises its data.
+
+---
+
+## Gross aid measure (`gross_aid/`)
+
+Not in the paper. This folder adds gross US ODA and gross DAC total ODA
+(OECD DAC2A, measure 240, disbursements, constant 2024 prices, USD
+millions, 2018-2022 mean) as a second aid measure. It runs the main models
+with net aid and with gross aid, side by side. The specification is in
+`gross_aid/SPEC.md`, written before any model ran.
+
+Put the two OECD files `oecd_gross_us_2018_2022.csv` and
+`oecd_gross_dac_2018_2022.csv` in `data/raw/`. Then run from the
+repository root:
+
+```bash
+python gross_aid/build_gross_aid.py
+python gross_aid/run_gross_aid.py
+```
+
+The first script checks the OECD files and writes
+`data/intermediate/aid_gross_2018_2022.csv`. It stops if a check fails. The
+second script first reproduces Table 3 and the unique-URL Table 4 with net
+aid, and stops if they do not match. Results: `gross_aid/results.csv` (all
+models), `gross_aid/side_by_side.csv` (net and gross for G1 to G7) and
+`gross_aid/log.txt` (all printed output).
+
+Limitations. The price base of the net aid sheet is not known, so net and
+gross levels can differ by a constant. The OECD data terms for
+redistribution were not checked, so keep the repository private. The
+folder runs 26 models (plus the 2 baseline reproductions). The 7
+no-article countries have no days value: the OLS days models leave them
+out, and the Cox models censor them at 365 days. IRN has 2 and ERI has 3
+years of US data; a missing year counts as 0. The Cox and negative binomial
+models use model-based standard errors, as in Tables B2 and B3.

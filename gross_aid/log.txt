@@ -1,0 +1,230 @@
+gross aid, part 1: merge (build_gross_aid.py)
+
+us file: rows N = 990, recipients N = 207
+  DONOR: values ['USA'], expected USA: ok
+  MEASURE: values ['240'], expected 240: ok
+  PRICE_BASE: values ['Q'], expected Q: ok
+  BASE_PER: values ['2024'], expected 2024: ok
+  UNIT_MULT: values ['6'], expected 6: ok
+  FLOW_TYPE: values ['D'], expected D: ok
+  TIME_PERIOD: [np.int64(2018), np.int64(2019), np.int64(2020), np.int64(2021), np.int64(2022)], expected only 2018 to 2022: ok
+  rows per year: {2018: 195, 2019: 193, 2020: 199, 2021: 201, 2022: 202}
+  OBS_VALUE missing N = 0, negative N = 0: ok
+  duplicate (recipient, year) rows N = 0: ok
+
+dac file: rows N = 1029, recipients N = 207
+  DONOR: values ['DAC'], expected DAC: ok
+  MEASURE: values ['240'], expected 240: ok
+  PRICE_BASE: values ['Q'], expected Q: ok
+  BASE_PER: values ['2024'], expected 2024: ok
+  UNIT_MULT: values ['6'], expected 6: ok
+  FLOW_TYPE: values ['D'], expected D: ok
+  TIME_PERIOD: [np.int64(2018), np.int64(2019), np.int64(2020), np.int64(2021), np.int64(2022)], expected only 2018 to 2022: ok
+  rows per year: {2018: 203, 2019: 207, 2020: 207, 2021: 207, 2022: 205}
+  OBS_VALUE missing N = 0, negative N = 0: ok
+  duplicate (recipient, year) rows N = 0: ok
+
+us <= dac check: us (recipient, year) rows N = 990; with no dac row N = 0; with us > dac N = 0
+
+sample file: N = 102
+recipient codes in the oecd files N = 207; joined to the sample N = 102; dropped N = 105
+dropped, not an iso3 code in country-codes.csv (aggregates and other codes), N = 72:
+  1UN004  IFAD
+  1UN014  UNDP
+  1UN017  UNFPA
+  1UN019  UNICEF
+  1UN999  Other UN
+  5AFDB001  African Development Bank [AfDB]
+  5AFDB002  African Development Fund [AfDF]
+  5ASDB02  AsDB Special Funds
+  5IMF01  International Monetary Fund [IMF]
+  5RDB999  Other Regional Banks
+  5WB001  International Bank for Reconstruction and Development [IBRD]
+  5WB002  International Development Association [IDA]
+  9OTH998  Other Multilateral
+  A  America
+  A3  Central America
+  A3_X  Central America unspecified
+  A4  Caribbean
+  A4_X  Caribbean unspecified
+  A5  Central America and the Caribbean
+  A5_X  Central America and the Caribbean unspecified
+  A7  South America
+  A7_X  South America unspecified
+  ACP  ACP
+  ALLMR  All multilateral recipients
+  ALLR  All recipients
+  A_X  America unspecified
+  DPGC  Developing countries
+  DPGC_X  Developing countries unspecified
+  E  Europe
+  E_X  Europe unspecified
+  F  Africa
+  F3  Eastern Africa
+  F3_X  Eastern Africa unspecified
+  F4  Northern Africa
+  F4_X  Northern Africa unspecified
+  F5  Middle Africa
+  F6  Sub-Saharan Africa
+  F6_X  Sub-Saharan Africa unspecified
+  F7  Southern Africa
+  F7_X  Southern Africa unspecified
+  F8  Western Africa
+  F8_X  Western Africa unspecified
+  F97  Middle East
+  F97_X  Middle East unspecified
+  FSCAC  Contexts in high and extreme fragility
+  HICSWB  High income countries (World Bank)
+  HIPC  Heavily-indebted poor countries
+  INC_X  Countries unallocated by income
+  LDC  Least developed countries
+  LLDC  Land locked developing countries
+  LMIC  Lower-middle income countries
+  LMICWB  Lower-middle income countries (World Bank)
+  MADCT  More advanced developed countries and territories
+  O  Oceania
+  O7  Melanesia
+  O8  Micronesia
+  O9  Polynesia
+  OLIC  Other low income countries
+  OLICWB  Low income countries (World Bank)
+  O_X  Oceania unspecified
+  S  Asia
+  S4_S7  Southern and Central Asia
+  S4_S7_X  Southern and Central Asia unspecified
+  S4_X  Central Asia unspecified
+  S7_X  Southern Asia unspecified
+  S97  Far East Asia
+  S97_X  Far East Asia unspecified
+  SIDS  Small island developing states
+  S_X  Asia unspecified
+  UMIC  Upper-middle income countries
+  UMICWB  Upper-middle income countries (World Bank)
+  XKV  Kosovo
+dropped, iso3 country not in the 102-country sample, N = 33:
+  ARG, ATG, BLR, BLZ, BRA, CHN, COM, CPV, DMA, GNQ, GRD, KIR, LCA, MDV, MHL, MNE, MUS, MYS, PAN, PLW, PRK, PSE, SLB, SRB, STP, SUR, SWZ, TKM, TON, TUR, TUV, VCT, WSM
+
+merged: N = 102
+
+sample countries with no row in the us file, N = 0: none
+sample countries with no row in the dac file, N = 0: none
+sample countries with fewer than 5 years (us or dac), N = 2:
+iso3 country  n_years_us  n_years_dac  us_gross_mean  dac_gross_mean
+ IRN    Iran           2            5        1.67980      201.540292
+ ERI Eritrea           3            5        0.22168       17.333141
+sample countries with us_share > 1, N = 0: none
+sample countries with dac_gross_mean <= 0, N = 0: none
+
+sanity values (tolerance 0.01 usd million):
+  UKR us_gross_mean: expected 2187.07, got 2187.0748, diff +0.0048: ok
+  UKR dac_gross_mean: expected 4563.85, got 4563.8482, diff -0.0018: ok
+  KEN us_gross_mean: expected 831.69, got 831.6897, diff -0.0003: ok
+  EGY us_gross_mean: expected 213.88, got 213.8831, diff +0.0031: ok
+  GAB us_gross_mean: expected 1.589, got 1.5890, diff -0.0000: ok
+  GAB dac_gross_mean: expected 124.76, got 124.7612, diff +0.0012: ok
+
+gross vs net: N with a net value = 102
+  spearman rho = 0.9684 (p = 4.11e-62), N = 102
+  median ratio gross / net (net > 0) = 1.0381, N = 100
+  countries with gross < net, N = 0:
+  the base year of the net sheet is not known, so levels may differ by a constant.
+
+wrote data/intermediate/aid_gross_2018_2022.csv: N = 102
+part 1: all checks passed
+
+========================================================================
+gross aid, parts 2 to 4 (run_gross_aid.py)
+========================================================================
+SPEC.md sha-256: 1206e9d8c25e6f2d848bb47e44622df6a40f3eb03ef6e24f01753a9319501617
+loaded 3-29-v2_oda_data.csv: N = 102
+N with a first-article date: 95
+N with net aid > 0: 100
+matched rows with a valid ISO3: N = 11833
+N with usaid_articles_unique > 0: 95
+N with total_articles_unique_url: 102
+N with an attention share: 102
+N with a gross aid row: 102
+N with us_gross_mean > 0: 102
+N with dac_gross_mean > 0: 102
+N with us_share > 0: 102
+N with population_avg > 0: 102
+N with gdp_avg > 0: 100
+analysis file: N = 102
+
+countries with fewer than 5 years of us data:
+ISO3 country  us_gross_mean  n_years_us  us_oda_disbursements  days_to_first_article  attention_share_unique
+ IRN    Iran        1.67980           2                   1.6                    5.0                0.000104
+ ERI Eritrea        0.22168           3                   0.2                   39.0                0.000943
+
+------------------------------------------------------------------------
+PART 2: BASELINES WITH NET AID
+------------------------------------------------------------------------
+table 3: N = 93  beta_hat = -0.169506  HC3 SE = 0.055054  p = 0.002078
+  coef: expected -0.1695, got -0.1695: ok
+  n: expected 93, got 93: ok
+  se: expected 0.0551, got 0.0551: ok
+  p: expected 0.0021, got 0.0021: ok
+unique-URL attention: N = 100  beta_hat (per 1,000) = 0.224011  HC3 SE (per 1,000) = 0.060313  p = 0.000204
+  coef: expected 0.224, got 0.224: ok
+  n: expected 100, got 100: ok
+  p: expected 0.0002, got 0.0002: ok
+baselines: all match
+
+------------------------------------------------------------------------
+PART 3: MODELS
+------------------------------------------------------------------------
+
+US aid (USD millions) (net):
+  G1 | US aid (USD millions) (net) | net aid > 0 | N = 93 | beta_hat = -0.169506 | HC3 SE = 0.055054 | p = 0.002078 | R2 = 0.1650
+  G2 | US aid (USD millions) (net) | net aid > 0 | N = 100 | beta_hat = 0.224011 | HC3 SE = 0.060313 | p = 0.000204 | R2 = 0.1227
+  G3 | US aid (USD millions) (net) | net aid > 0 | N = 93 | beta_hat = -0.096130 | HC3 SE = 0.050694 | p = 0.057922 | R2 = 0.3346
+  G4 | US aid (USD millions) (net) | net aid > 0 | N = 100 | beta_hat = 0.323191 | HC3 SE = 0.072453 | p = 0.000008 | R2 = 0.2344
+  cox sample N = 100, events = 93, censored = 7
+  G5 without volume | US aid (USD millions) (net) | net aid > 0 | N = 100 | beta_hat = 0.400537 | Cox model-based SE = 0.083591 | p = 0.000002
+  cox sample N = 100, events = 93, censored = 7
+  G5 with volume | US aid (USD millions) (net) | net aid > 0 | N = 100 | beta_hat = 0.248413 | Cox model-based SE = 0.083823 | p = 0.003041
+  G6 | US aid (USD millions) (net) | net aid > 0 | N = 100 | beta_hat = 0.249327 | model-based (MLE) SE = 0.066434 | p = 0.000175
+  G7 days | US aid (USD millions) (net) | net aid > 0 | N = 91 | beta_hat = -0.114551 | HC3 SE = 0.081785 | p = 0.161324 | R2 = 0.2176
+  G7 attention | US aid (USD millions) (net) | net aid > 0 | N = 98 | beta_hat = 0.307516 | HC3 SE = 0.083365 | p = 0.000225 | R2 = 0.2708
+
+US aid (USD millions) (gross):
+  G1 | US aid (USD millions) (gross) | gross aid > 0 | N = 95 | beta_hat = -0.167083 | HC3 SE = 0.052149 | p = 0.001356 | R2 = 0.1658
+  G2 | US aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = 0.212455 | HC3 SE = 0.056886 | p = 0.000188 | R2 = 0.1151
+  G3 | US aid (USD millions) (gross) | gross aid > 0 | N = 95 | beta_hat = -0.088092 | HC3 SE = 0.049625 | p = 0.075873 | R2 = 0.3305
+  G4 | US aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = 0.322148 | HC3 SE = 0.071348 | p = 0.000006 | R2 = 0.2348
+  cox sample N = 102, events = 95, censored = 7
+  G5 without volume | US aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = 0.388219 | Cox model-based SE = 0.081686 | p = 0.000002
+  cox sample N = 102, events = 95, censored = 7
+  G5 with volume | US aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = 0.232696 | Cox model-based SE = 0.082635 | p = 0.004863
+  G6 | US aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = 0.239312 | model-based (MLE) SE = 0.065672 | p = 0.000268
+  G7 days | US aid (USD millions) (gross) | gross aid > 0 | N = 93 | beta_hat = -0.108915 | HC3 SE = 0.077060 | p = 0.157547 | R2 = 0.2230
+  G7 attention | US aid (USD millions) (gross) | gross aid > 0 | N = 100 | beta_hat = 0.297240 | HC3 SE = 0.081808 | p = 0.000280 | R2 = 0.2674
+
+G8: joint model, log us_gross + log dac_gross
+  G8 joint | US aid (USD millions) (gross) | gross aid > 0 | N = 95 | beta_hat = 0.005425 | HC3 SE = 0.088422 | p = 0.951081 | R2 = 0.2366
+  G8 joint | DAC aid (USD millions) (gross) | gross aid > 0 | N = 95 | beta_hat = -0.296831 | HC3 SE = 0.116415 | p = 0.010779 | R2 = 0.2366
+  log_days: N = 95; pearson r(log us_gross, log dac_gross) = 0.8449; VIF = 3.4938; joint HC3 wald test both = 0: chi2(2) = 20.2162, p = 4.07481e-05
+  G8 joint | US aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = 0.432121 | HC3 SE = 0.109956 | p = 0.000085 | R2 = 0.1672
+  G8 joint | DAC aid (USD millions) (gross) | gross aid > 0 | N = 102 | beta_hat = -0.387061 | HC3 SE = 0.170611 | p = 0.023288 | R2 = 0.1672
+  log_attention_share_unique: N = 102; pearson r(log us_gross, log dac_gross) = 0.8381; VIF = 3.3604; joint HC3 wald test both = 0: chi2(2) = 19.2497, p = 6.60675e-05
+
+G9: log us_share
+  G9 | US share of DAC aid (gross) | gross aid > 0 | N = 95 | beta_hat = -0.095797 | HC3 SE = 0.098378 | p = 0.330171 | R2 = 0.0169
+  G9 | US share of DAC aid (gross) | gross aid > 0 | N = 102 | beta_hat = 0.447302 | HC3 SE = 0.099397 | p = 0.000007 | R2 = 0.1650
+
+negative-aid check:
+  days: net sample N = 93, gross sample N = 95; in gross but not in net: EGY, GAB
+  attention: net sample N = 100, gross sample N = 102; in gross but not in net: EGY, GAB
+ISO3 country  us_oda_disbursements  us_gross_mean  dac_gross_mean  us_share  days_to_first_article  attention_share_unique
+ EGY   Egypt                 -23.7     213.883119     1302.726670  0.164181                    5.0                0.000388
+ GAB   Gabon                  -1.2       1.588993      124.761211  0.012736                   17.0                0.000746
+
+G1 to G4 with gross aid on the net sample (N countries = 100):
+  G1 | US aid (USD millions) (gross) | net sample (net aid > 0) | N = 93 | beta_hat = -0.173501 | HC3 SE = 0.055842 | p = 0.001890 | R2 = 0.1714
+  G2 | US aid (USD millions) (gross) | net sample (net aid > 0) | N = 100 | beta_hat = 0.221946 | HC3 SE = 0.059986 | p = 0.000216 | R2 = 0.1195
+  G3 | US aid (USD millions) (gross) | net sample (net aid > 0) | N = 93 | beta_hat = -0.098709 | HC3 SE = 0.051880 | p = 0.057090 | R2 = 0.3362
+  G4 | US aid (USD millions) (gross) | net sample (net aid > 0) | N = 100 | beta_hat = 0.325137 | HC3 SE = 0.073249 | p = 0.000009 | R2 = 0.2332
+
+wrote results.csv: 28 rows
+wrote side_by_side.csv: 9 rows
+models run: 26 (results.csv has 28 rows; G8 has 2 rows per model)
