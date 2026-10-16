@@ -1,0 +1,142 @@
+========================================================================
+gross aid follow-up (gross_aid/followup/run_followup.py)
+========================================================================
+gross_aid/SPEC.md sha-256: 1206e9d8c25e6f2d848bb47e44622df6a40f3eb03ef6e24f01753a9319501617: ok
+gross_aid/followup/SPEC.md sha-256: a505781224401e01c3eb7ace536c08a8bf5804d8258e5f1c772f3b08e74b6a03: ok
+loaded 3-29-v2_oda_data.csv: N = 102
+analysis file: N = 102
+
+------------------------------------------------------------------------
+PART A: IRN AND ERI IN THE OECD FILES (read only, no models)
+------------------------------------------------------------------------
+A1. data/raw/oecd_gross_us_2018_2022.csv: rows N = 990, columns N = 26
+  columns: STRUCTURE, STRUCTURE_ID, STRUCTURE_NAME, ACTION, DONOR, Donor, RECIPIENT, Recipient, MEASURE, Measure, UNIT_MEASURE, Unit of measure, PRICE_BASE, Price base, TIME_PERIOD, Time period, OBS_VALUE, Observation value, BASE_PER, Base period, UNIT_MULT, Unit multiplier, FLOW_TYPE, Flow type, OBS_STATUS, Observation status
+  us file OBS_STATUS, whole file: {'A': 990}; 'Observation status': {'Normal value': 990}
+  us file OBS_STATUS, IRN: {'A': 2}
+  us file OBS_STATUS, ERI: {'A': 3}
+  dac file OBS_STATUS, whole file: {'A': 1029}; 'Observation status': {'Normal value': 1029}
+  dac file OBS_STATUS, IRN: {'A': 5}
+  dac file OBS_STATUS, ERI: {'A': 5}
+
+A2. years and values (USD millions, constant 2024 prices)
+  IRN us file: years N = 2; 2018: 6.727094, 2019: 1.671904
+  IRN dac file: years N = 5; 2018: 156.42551, 2019: 178.24562, 2020: 191.050426, 2021: 227.069461, 2022: 254.910442
+  ERI us file: years N = 3; 2018: 0.922094, 2019: 0.067279, 2020: 0.119027
+  ERI dac file: years N = 5; 2018: 18.036581, 2019: 25.240865, 2020: 14.516881, 2021: 15.226365, 2022: 13.645012
+
+A3. us_gross_mean (sum / 5), sum / n_years, and net us_oda_disbursements
+  IRN: sum = 8.398998, n_years = 2; sum / 5 = 1.679800 (aid_gross_2018_2022.csv us_gross_mean = 1.679800); sum / n_years = 4.199499; net = 1.6
+    |sum / 5 - net| = 0.079800; |sum / n_years - net| = 2.599499; closer to net: sum / 5
+  ERI: sum = 1.108400, n_years = 3; sum / 5 = 0.221680 (aid_gross_2018_2022.csv us_gross_mean = 0.221680); sum / n_years = 0.369467; net = 0.2
+    |sum / 5 - net| = 0.021680; |sum / n_years - net| = 0.169467; closer to net: sum / 5
+  the us file has no row for the other years. the data do not show whether those years are zero or not reported. the price base of the net sheet is not known.
+
+------------------------------------------------------------------------
+CHECK: FULL-SAMPLE GROSS VALUES OF gross_aid/results.csv
+------------------------------------------------------------------------
+  G1 log_days log_us_gross: expected -0.16708 (N 95), got -0.16708 (N 95): ok
+  G2 log_attention_share_unique log_us_gross: expected 0.21245 (N 102), got 0.21245 (N 102): ok
+  G8 log_days log_us_gross: expected 0.0054, got 0.0054 (N 95): ok
+  G8 log_days log_dac_gross: expected -0.2968, got -0.2968 (N 95): ok
+  G8 log_attention_share_unique log_us_gross: expected 0.4321, got 0.4321 (N 102): ok
+  G8 log_attention_share_unique log_dac_gross: expected -0.3871, got -0.3871 (N 102): ok
+  G9 log_days log_us_share: expected -0.0958, got -0.0958 (N 95): ok
+  G9 log_attention_share_unique log_us_share: expected 0.4473, got 0.4473 (N 102): ok
+check: all match
+
+------------------------------------------------------------------------
+B1: KEEP COUNTRIES WITH usaid_articles_unique >= 5 AND >= 10 (selects on the attention outcome)
+------------------------------------------------------------------------
+  threshold 5: kept N = 58, dropped N = 44 (of 102):
+    BDI (0), BOL (0), DZA (0), GEO (0), GNB (0), MRT (0), TUN (0), AGO (1), AZE (1), BEN (1), BIH (1), BTN (1), CAF (1), FJI (1), GAB (1), GIN (1), KAZ (1), LAO (1), CIV (2), CRI (2), ECU (2), ERI (2), GMB (2), KGZ (2), LBY (2), MKD (2), MNG (2), PRY (2), SLE (2), TGO (2), UZB (2), ALB (3), ARM (3), DJI (3), FSM (3), JAM (3), NIC (3), PNG (3), TLS (3), GUY (4), MDG (4), SEN (4), TJK (4), VUT (4)
+  threshold 10: kept N = 45, dropped N = 57 (of 102):
+    BDI (0), BOL (0), DZA (0), GEO (0), GNB (0), MRT (0), TUN (0), AGO (1), AZE (1), BEN (1), BIH (1), BTN (1), CAF (1), FJI (1), GAB (1), GIN (1), KAZ (1), LAO (1), CIV (2), CRI (2), ECU (2), ERI (2), GMB (2), KGZ (2), LBY (2), MKD (2), MNG (2), PRY (2), SLE (2), TGO (2), UZB (2), ALB (3), ARM (3), DJI (3), FSM (3), JAM (3), NIC (3), PNG (3), TLS (3), GUY (4), MDG (4), SEN (4), TJK (4), VUT (4), MAR (5), TCD (5), CMR (6), LKA (6), NER (6), BWA (7), BFA (8), DOM (8), HND (8), MDA (8), TZA (8), IRQ (9), NAM (9)
+
+  G1 log us_gross        | full                               | days      | N =  95 | beta_hat = -0.1671 | HC3 SE = 0.0521 | p = 0.0014 | R2 = 0.1658
+  G2 log us_gross        | full                               | attention | N = 102 | beta_hat = +0.2125 | HC3 SE = 0.0569 | p = 0.0002 | R2 = 0.1151
+  G8 log us_gross        | full                               | days      | N =  95 | beta_hat = +0.0054 | HC3 SE = 0.0884 | p = 0.9511 | R2 = 0.2366
+  G8 log dac_gross       | full                               | days      | N =  95 | beta_hat = -0.2968 | HC3 SE = 0.1164 | p = 0.0108 | R2 = 0.2366
+    r = 0.8449; VIF = 3.4938; HC3 wald both = 0: chi2(2) = 20.2162, p = 4.07481e-05
+  G8 log us_gross        | full                               | attention | N = 102 | beta_hat = +0.4321 | HC3 SE = 0.1100 | p = 0.0001 | R2 = 0.1672
+  G8 log dac_gross       | full                               | attention | N = 102 | beta_hat = -0.3871 | HC3 SE = 0.1706 | p = 0.0233 | R2 = 0.1672
+    r = 0.8381; VIF = 3.3604; HC3 wald both = 0: chi2(2) = 19.2497, p = 6.60675e-05
+  G9 log us_share        | full                               | days      | N =  95 | beta_hat = -0.0958 | HC3 SE = 0.0984 | p = 0.3302 | R2 = 0.0169
+  G9 log us_share        | full                               | attention | N = 102 | beta_hat = +0.4473 | HC3 SE = 0.0994 | p = 0.0000 | R2 = 0.1650
+  G1 log us_gross        | B1 usaid_articles_unique >= 5      | days      | N =  58 | beta_hat = -0.0787 | HC3 SE = 0.1018 | p = 0.4397 | R2 = 0.0413
+  G2 log us_gross        | B1 usaid_articles_unique >= 5      | attention | N =  58 | beta_hat = +0.1441 | HC3 SE = 0.1453 | p = 0.3213 | R2 = 0.0223
+  G8 log us_gross        | B1 usaid_articles_unique >= 5      | days      | N =  58 | beta_hat = +0.0651 | HC3 SE = 0.1293 | p = 0.6148 | R2 = 0.1392
+  G8 log dac_gross       | B1 usaid_articles_unique >= 5      | days      | N =  58 | beta_hat = -0.2430 | HC3 SE = 0.1189 | p = 0.0409 | R2 = 0.1392
+    r = 0.7647; VIF = 2.4080; HC3 wald both = 0: chi2(2) = 7.3624, p = 0.0251928
+  G8 log us_gross        | B1 usaid_articles_unique >= 5      | attention | N =  58 | beta_hat = +0.6083 | HC3 SE = 0.1643 | p = 0.0002 | R2 = 0.1866
+  G8 log dac_gross       | B1 usaid_articles_unique >= 5      | attention | N =  58 | beta_hat = -0.7847 | HC3 SE = 0.2263 | p = 0.0005 | R2 = 0.1866
+    r = 0.7647; VIF = 2.4080; HC3 wald both = 0: chi2(2) = 16.0575, p = 0.000325949
+  G9 log us_share        | B1 usaid_articles_unique >= 5      | days      | N =  58 | beta_hat = +0.0680 | HC3 SE = 0.0966 | p = 0.4814 | R2 = 0.0128
+  G9 log us_share        | B1 usaid_articles_unique >= 5      | attention | N =  58 | beta_hat = +0.6112 | HC3 SE = 0.1840 | p = 0.0009 | R2 = 0.1666
+  G1 log us_gross        | B1 usaid_articles_unique >= 10     | days      | N =  45 | beta_hat = -0.0574 | HC3 SE = 0.1116 | p = 0.6071 | R2 = 0.0268
+  G2 log us_gross        | B1 usaid_articles_unique >= 10     | attention | N =  45 | beta_hat = +0.1434 | HC3 SE = 0.1769 | p = 0.4175 | R2 = 0.0209
+  G8 log us_gross        | B1 usaid_articles_unique >= 10     | days      | N =  45 | beta_hat = +0.1014 | HC3 SE = 0.1164 | p = 0.3836 | R2 = 0.1844
+  G8 log dac_gross       | B1 usaid_articles_unique >= 10     | days      | N =  45 | beta_hat = -0.2967 | HC3 SE = 0.1169 | p = 0.0111 | R2 = 0.1844
+    r = 0.7521; VIF = 2.3023; HC3 wald both = 0: chi2(2) = 7.6047, p = 0.0223185
+  G8 log us_gross        | B1 usaid_articles_unique >= 10     | attention | N =  45 | beta_hat = +0.6677 | HC3 SE = 0.1607 | p = 0.0000 | R2 = 0.2354
+  G8 log dac_gross       | B1 usaid_articles_unique >= 10     | attention | N =  45 | beta_hat = -0.9795 | HC3 SE = 0.2751 | p = 0.0004 | R2 = 0.2354
+    r = 0.7521; VIF = 2.3023; HC3 wald both = 0: chi2(2) = 19.4381, p = 6.01267e-05
+  G9 log us_share        | B1 usaid_articles_unique >= 10     | days      | N =  45 | beta_hat = +0.0885 | HC3 SE = 0.0838 | p = 0.2909 | R2 = 0.0278
+  G9 log us_share        | B1 usaid_articles_unique >= 10     | attention | N =  45 | beta_hat = +0.6471 | HC3 SE = 0.2057 | p = 0.0017 | R2 = 0.1855
+
+------------------------------------------------------------------------
+B2: IRN AND ERI
+------------------------------------------------------------------------
+ISO3  usaid_articles_unique  days_to_first_article  us_gross_mean  n_years_us  dac_gross_mean  us_share
+ IRN                   10.0                    5.0        1.67980           2      201.540292  0.008335
+ ERI                    2.0                   39.0        0.22168           3       17.333141  0.012789
+  G1 log us_gross        | B2 (i) drop IRN ERI                | days      | N =  93 | beta_hat = -0.1995 | HC3 SE = 0.0595 | p = 0.0008 | R2 = 0.1993
+  G2 log us_gross        | B2 (i) drop IRN ERI                | attention | N = 100 | beta_hat = +0.2363 | HC3 SE = 0.0610 | p = 0.0001 | R2 = 0.1201
+  G8 log us_gross        | B2 (i) drop IRN ERI                | days      | N =  93 | beta_hat = -0.0522 | HC3 SE = 0.0929 | p = 0.5741 | R2 = 0.2433
+  G8 log dac_gross       | B2 (i) drop IRN ERI                | days      | N =  93 | beta_hat = -0.2387 | HC3 SE = 0.1110 | p = 0.0315 | R2 = 0.2433
+    r = 0.8435; VIF = 3.4671; HC3 wald both = 0: chi2(2) = 17.0380, p = 0.000199637
+  G8 log us_gross        | B2 (i) drop IRN ERI                | attention | N = 100 | beta_hat = +0.4841 | HC3 SE = 0.1226 | p = 0.0001 | R2 = 0.1773
+  G8 log dac_gross       | B2 (i) drop IRN ERI                | attention | N = 100 | beta_hat = -0.4165 | HC3 SE = 0.1781 | p = 0.0193 | R2 = 0.1773
+    r = 0.8351; VIF = 3.3049; HC3 wald both = 0: chi2(2) = 19.3188, p = 6.38224e-05
+  G9 log us_share        | B2 (i) drop IRN ERI                | days      | N =  93 | beta_hat = -0.1314 | HC3 SE = 0.1030 | p = 0.2018 | R2 = 0.0260
+  G9 log us_share        | B2 (i) drop IRN ERI                | attention | N = 100 | beta_hat = +0.5027 | HC3 SE = 0.1133 | p = 0.0000 | R2 = 0.1726
+  variant (ii) values:
+ISO3  us_gross_mean  us_share
+ IRN       4.199499  0.020837
+ ERI       0.369467  0.021316
+  G1 log us_gross        | B2 (ii) IRN ERI sum / n_years      | days      | N =  95 | beta_hat = -0.1763 | HC3 SE = 0.0516 | p = 0.0006 | R2 = 0.1765
+  G2 log us_gross        | B2 (ii) IRN ERI sum / n_years      | attention | N = 102 | beta_hat = +0.2178 | HC3 SE = 0.0576 | p = 0.0002 | R2 = 0.1163
+  G8 log us_gross        | B2 (ii) IRN ERI sum / n_years      | days      | N =  95 | beta_hat = -0.0090 | HC3 SE = 0.0880 | p = 0.9189 | R2 = 0.2367
+  G8 log dac_gross       | B2 (ii) IRN ERI sum / n_years      | days      | N =  95 | beta_hat = -0.2793 | HC3 SE = 0.1132 | p = 0.0136 | R2 = 0.2367
+    r = 0.8517; VIF = 3.6409; HC3 wald both = 0: chi2(2) = 20.0811, p = 4.3595e-05
+  G8 log us_gross        | B2 (ii) IRN ERI sum / n_years      | attention | N = 102 | beta_hat = +0.4574 | HC3 SE = 0.1140 | p = 0.0001 | R2 = 0.1732
+  G8 log dac_gross       | B2 (ii) IRN ERI sum / n_years      | attention | N = 102 | beta_hat = -0.4112 | HC3 SE = 0.1735 | p = 0.0178 | R2 = 0.1732
+    r = 0.8438; VIF = 3.4724; HC3 wald both = 0: chi2(2) = 20.2055, p = 4.09662e-05
+  G9 log us_share        | B2 (ii) IRN ERI sum / n_years      | days      | N =  95 | beta_hat = -0.1104 | HC3 SE = 0.0974 | p = 0.2571 | R2 = 0.0205
+  G9 log us_share        | B2 (ii) IRN ERI sum / n_years      | attention | N = 102 | beta_hat = +0.4731 | HC3 SE = 0.1033 | p = 0.0000 | R2 = 0.1709
+
+------------------------------------------------------------------------
+B3: AID OVER GDP (extra, not in the original spec)
+------------------------------------------------------------------------
+  gdp_avg: WDI NY.GDP.MKTP.CD, current USD (not millions), 2018-2022 mean. aid: constant 2024 USD millions. ratio = aid x 1,000,000 / gdp_avg. the price bases differ (constant 2024 vs current).
+  gdp_avg missing N = 2: SSD, ERI
+  countries with gdp_avg > 0: N = 100
+  us_gdp: N > 0 = 100, median = 0.002965
+  dac_gdp: N > 0 = 100, median = 0.015964
+  G8 log us_gross        | B3 levels on the gdp sample        | days      | N =  93 | beta_hat = +0.0018 | HC3 SE = 0.0977 | p = 0.9854 | R2 = 0.2263
+  G8 log dac_gross       | B3 levels on the gdp sample        | days      | N =  93 | beta_hat = -0.2969 | HC3 SE = 0.1180 | p = 0.0119 | R2 = 0.2263
+    r = 0.8287; VIF = 3.1922; HC3 wald both = 0: chi2(2) = 17.6015, p = 0.000150618
+  G8 log us_gross        | B3 levels on the gdp sample        | attention | N = 100 | beta_hat = +0.4483 | HC3 SE = 0.1114 | p = 0.0001 | R2 = 0.1714
+  G8 log dac_gross       | B3 levels on the gdp sample        | attention | N = 100 | beta_hat = -0.3953 | HC3 SE = 0.1711 | p = 0.0209 | R2 = 0.1714
+    r = 0.8223; VIF = 3.0886; HC3 wald both = 0: chi2(2) = 20.2586, p = 3.98927e-05
+  G8 log us_gross/gdp    | B3 aid / gdp                       | days      | N =  93 | beta_hat = -0.0897 | HC3 SE = 0.1217 | p = 0.4613 | R2 = 0.0144
+  G8 log dac_gross/gdp   | B3 aid / gdp                       | days      | N =  93 | beta_hat = +0.1286 | HC3 SE = 0.1969 | p = 0.5138 | R2 = 0.0144
+    r = 0.8745; VIF = 4.2512; HC3 wald both = 0: chi2(2) = 0.5428, p = 0.762308
+  G8 log us_gross/gdp    | B3 aid / gdp                       | attention | N = 100 | beta_hat = +0.3499 | HC3 SE = 0.0871 | p = 0.0001 | R2 = 0.2668
+  G8 log dac_gross/gdp   | B3 aid / gdp                       | attention | N = 100 | beta_hat = -0.0848 | HC3 SE = 0.1044 | p = 0.4164 | R2 = 0.2668
+    r = 0.8724; VIF = 4.1847; HC3 wald both = 0: chi2(2) = 26.3139, p = 1.93199e-06
+  G9 log us_share        | B3 aid / gdp                       | days      | N =  93 | beta_hat = -0.0742 | HC3 SE = 0.1060 | p = 0.4837 | R2 = 0.0093
+  G9 log us_share        | B3 aid / gdp                       | attention | N = 100 | beta_hat = +0.4621 | HC3 SE = 0.1023 | p = 0.0000 | R2 = 0.1684
+  G9 ratio log us_gross/gdp | B3 aid / gdp                       | days      | N =  93 | beta_hat = -0.0067 | HC3 SE = 0.0530 | p = 0.8999 | R2 = 0.0003
+  G9 ratio log us_gross/gdp | B3 aid / gdp                       | attention | N = 100 | beta_hat = +0.2969 | HC3 SE = 0.0579 | p = 0.0000 | R2 = 0.2642
+
+wrote gross_aid/followup/results.csv: 52 rows
