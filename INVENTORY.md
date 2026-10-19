@@ -323,3 +323,11 @@ V-Dem raw CSV).
   (scatterplotting/: 8 fig_*.png + 2 regression_*.png ~3.18 MB)
   (scatterplotting/outputs/: 4 PNG ~860 KB, 6 CSV ~2.9 KB, 2 TXT 467 B)
 ```
+
+## 6. New files after the inventory: `gross_aid/share_main/`
+
+| Path | What it is |
+|---|---|
+| `gross_aid/share_main/SPEC.md` | share main: specification, written before any model ran, revised after the first run to remove models that were not requested by the co-author (original SHA-256 `50ed8c2832a7f5ba14d3e931f2ee5db95bf4bad50e2c73673ff58372aee985fa`, new SHA-256 `118cfa564367e75dc5d314626b03b548708791a8c5a1f6092a11c35beac4eea0`) |
+| `gross_aid/share_main/run_share_main.py` | share main: untransformed attention share as the main outcome (international news attention associated with a country's event geography), log US share of gross DAC aid as the central regressor; M1 to M4 on attention, M1 on days, robustness samples for M1 and M2 on attention, negative binomial for S and S + T, the M2 and M3 equivalence, the Table 1 recomputation, the draft check and the draft Table 2 layout with the raw outcome |
+| `gross_aid/share_main/results.csv`, `equivalence.csv`, `table1_check.csv`, `draft_check.csv`, `table2_raw.csv`, `log.txt` | share main: outputs of `run_share_main.py` (overwritten on each run) |

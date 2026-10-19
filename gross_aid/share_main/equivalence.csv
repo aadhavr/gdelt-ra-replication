@@ -1,0 +1,13 @@
+check,outcome,N,quantity_a,value_a,quantity_b,value_b,max_abs_diff,tolerance,result,note
+1a fitted values,raw fraction,102,M2 fitted (all),,M3 fitted (all),,2.0057740190981832e-18,1e-08,pass,unscaled coefficients and se.
+1b r2,raw fraction,102,M2 r2,0.16706876841527707,M3 r2,0.1670687684152773,2.220446049250313e-16,1e-08,pass,unscaled coefficients and se.
+2 coef S (M2) = coef U (M3),raw fraction,102,M2 b_S,0.00043287888829813366,M3 b_U,0.0004328788882981343,6.505213034913027e-19,1e-08,pass,unscaled coefficients and se.
+3 coef T (M2) = b_U + b_T (M3),raw fraction,102,M2 b_T,4.5061745234260743e-05,M3 b_U + b_T,4.5061745234260906e-05,1.6263032587282567e-19,1e-08,pass,unscaled coefficients and se.
+4 hc3 se T (M2),raw fraction,102,M2 se_T,9.789070817998064e-05,sqrt(v_U + v_T + 2 cov_UT) M3,9.789070817998059e-05,5.421010862427522e-20,1e-08,pass,unscaled coefficients and se.
+1a fitted values,ln(1 + share),102,M2 fitted (all),,M3 fitted (all),,2.3310346708438345e-18,1e-08,pass,unscaled coefficients and se.
+1b r2,ln(1 + share),102,M2 r2,0.16716454419640825,M3 r2,0.16716454419640825,0.0,1e-08,pass,unscaled coefficients and se.
+2 coef S (M2) = coef U (M3),ln(1 + share),102,M2 b_S,0.0004321210427396442,M3 b_U,0.00043212104273964477,5.421010862427522e-19,1e-08,pass,unscaled coefficients and se.
+3 coef T (M2) = b_U + b_T (M3),ln(1 + share),102,M2 b_T,4.506012783761368e-05,M3 b_U + b_T,4.506012783761368e-05,0.0,1e-08,pass,unscaled coefficients and se.
+4 hc3 se T (M2),ln(1 + share),102,M2 se_T,9.768656995675359e-05,sqrt(v_U + v_T + 2 cov_UT) M3,9.768656995675355e-05,4.0657581468206416e-20,1e-08,pass,unscaled coefficients and se.
+"collinearity corr(S, T)",,102,"pearson r ln(us_share), ln(dac_gross_mean)",0.2829764467494426,vif = 1 / (1 - r^2),1.0870459305756301,,,,"full sample, pairwise complete."
+"collinearity corr(U, T)",,102,"pearson r ln(us_gross_mean), ln(dac_gross_mean)",0.8381006244123747,vif = 1 / (1 - r^2),3.360357966540454,,,,"full sample, pairwise complete."

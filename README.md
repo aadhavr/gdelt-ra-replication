@@ -271,3 +271,21 @@ no-article countries have no days value: the OLS days models leave them
 out, and the Cox models censor them at 365 days. IRN has 2 and ERI has 3
 years of US data; a missing year counts as 0. The Cox and negative binomial
 models use model-based standard errors, as in Tables B2 and B3.
+
+US share as the central regressor (`gross_aid/share_main/`). Not in the
+paper. The outcome here is international news attention associated with a
+country's event geography (GDELT assigns events by event location,
+`ActionGeo_CountryCode`). The main attention outcome is the untransformed
+unique-URL attention share; ln(1 + share) is a robustness check. The
+central regressor is the log US share of total gross DAC aid, alone and
+with log total DAC aid (HC3 SE). The folder also checks that this joint
+model is a reparametrisation of the old G8, recomputes the Table 1
+statistics of the paper draft and compares the draft numbers with the
+data. `table2_raw.csv` gives the draft Table 2 models with the raw
+outcome, with ln(1 + share) in extra columns. The specification is in
+`gross_aid/share_main/SPEC.md`, written before any model ran and revised
+after the first run to remove models that were not requested by the
+co-author (original SHA-256 `50ed8c2832a7f5ba14d3e931f2ee5db95bf4bad50e2c73673ff58372aee985fa`, new SHA-256
+`118cfa564367e75dc5d314626b03b548708791a8c5a1f6092a11c35beac4eea0`). Run `python gross_aid/share_main/run_share_main.py`
+from the repository root. It stops if a spec hash or a log-version
+pre-check does not match.

@@ -1,0 +1,263 @@
+========================================================================
+share main (gross_aid/share_main/run_share_main.py)
+========================================================================
+gross_aid/SPEC.md sha-256: 1206e9d8c25e6f2d848bb47e44622df6a40f3eb03ef6e24f01753a9319501617: ok
+gross_aid/followup/SPEC.md sha-256: a505781224401e01c3eb7ace536c08a8bf5804d8258e5f1c772f3b08e74b6a03: ok
+gross_aid/share_main/SPEC.md sha-256: 118cfa564367e75dc5d314626b03b548708791a8c5a1f6092a11c35beac4eea0: ok
+loaded 3-29-v2_oda_data.csv: N = 102
+analysis file: N = 102
+  N non-missing attention_share_unique: 102
+  N non-missing days_to_first_article: 95
+  N non-missing S: 102
+  N non-missing T: 102
+  N non-missing U: 102
+  N non-missing V: 102
+  N non-missing gdp_avg: 100
+
+------------------------------------------------------------------------
+PRE-CHECK: LOG VERSIONS OF G8 AND G9, TABLE 3 AND THE UNIQUE-URL TABLE 4 (net aid)
+------------------------------------------------------------------------
+  G9 days: expected -0.0958 (N 95), got -0.0958 (N 95): ok
+  G9 attention: expected 0.4473 (N 102), got 0.4473 (N 102): ok
+  G8 days US: expected 0.0054, got 0.0054 (N 95): ok
+  G8 days DAC: expected -0.2968, got -0.2968 (N 95): ok
+  G8 attention US: expected 0.4321, got 0.4321 (N 102): ok
+  G8 attention DAC: expected -0.3871, got -0.3871 (N 102): ok
+  table 3 (net): expected (-0.1695, N 93, HC3 SE 0.0551), got (-0.1695, 93, 0.0551): ok
+  unique-url attention (net, log outcome, per 1,000): expected (0.224, N 100), got (0.224, 100): ok
+pre-check: all match
+
+------------------------------------------------------------------------
+M1 TO M4, FULL SAMPLE (ols, hc3)
+------------------------------------------------------------------------
+  M1   | raw fraction  | full                       | N = 102 | ln(us_share)                  | beta_hat = +0.4481 | HC3 SE = 0.0996 | p = 0.0000 | R2 = 0.1649
+  M1   | ln(1 + share) | full                       | N = 102 | ln(us_share)                  | beta_hat = +0.4473 | HC3 SE = 0.0994 | p = 0.0000 | R2 = 0.1650
+  M1   | ln(1 + days)  | full                       | N =  95 | ln(us_share)                  | beta_hat = -0.0958 | HC3 SE = 0.0984 | p = 0.3302 | R2 = 0.0169
+  M2   | raw fraction  | full                       | N = 102 | ln(us_share)                  | beta_hat = +0.4329 | HC3 SE = 0.1102 | p = 0.0001 | R2 = 0.1671
+  M2   | raw fraction  | full                       | N = 102 | ln(dac_gross_mean)            | beta_hat = +0.0451 | HC3 SE = 0.0979 | p = 0.6453 | R2 = 0.1671
+  M2   | ln(1 + share) | full                       | N = 102 | ln(us_share)                  | beta_hat = +0.4321 | HC3 SE = 0.1100 | p = 0.0001 | R2 = 0.1672
+  M2   | ln(1 + share) | full                       | N = 102 | ln(dac_gross_mean)            | beta_hat = +0.0451 | HC3 SE = 0.0977 | p = 0.6446 | R2 = 0.1672
+  M3   | raw fraction  | full                       | N = 102 | ln(us_gross_mean)             | beta_hat = +0.4329 | HC3 SE = 0.1102 | p = 0.0001 | R2 = 0.1671
+  M3   | raw fraction  | full                       | N = 102 | ln(dac_gross_mean)            | beta_hat = -0.3878 | HC3 SE = 0.1710 | p = 0.0233 | R2 = 0.1671
+  M3   | ln(1 + share) | full                       | N = 102 | ln(us_gross_mean)             | beta_hat = +0.4321 | HC3 SE = 0.1100 | p = 0.0001 | R2 = 0.1672
+  M3   | ln(1 + share) | full                       | N = 102 | ln(dac_gross_mean)            | beta_hat = -0.3871 | HC3 SE = 0.1706 | p = 0.0233 | R2 = 0.1672
+  M4   | raw fraction  | full                       | N = 102 | ln(us_gross_mean)             | beta_hat = +0.2128 | HC3 SE = 0.0570 | p = 0.0002 | R2 = 0.1150
+  M4   | ln(1 + share) | full                       | N = 102 | ln(us_gross_mean)             | beta_hat = +0.2125 | HC3 SE = 0.0569 | p = 0.0002 | R2 = 0.1151
+
+  M4 vs the old G2 (log attention, 0.21245, N 102):
+    ln(1 + share): M4 = 0.21245 (N 102), old = 0.21245: same
+
+------------------------------------------------------------------------
+EQUIVALENCE OF M2 (S + T) AND M3 (U + T), FULL SAMPLE
+------------------------------------------------------------------------
+  1a fitted values               | raw fraction  | M2 fitted (all) vs M3 fitted (all) | max abs diff = 2.006e-18 | pass
+  1b r2                          | raw fraction  | M2 r2 = 0.1670687684 | M3 r2 = 0.1670687684 | max abs diff = 2.220e-16 | pass
+  2 coef S (M2) = coef U (M3)    | raw fraction  | M2 b_S = 0.0004328788883 | M3 b_U = 0.0004328788883 | max abs diff = 6.505e-19 | pass
+  3 coef T (M2) = b_U + b_T (M3) | raw fraction  | M2 b_T = 4.506174523e-05 | M3 b_U + b_T = 4.506174523e-05 | max abs diff = 1.626e-19 | pass
+  4 hc3 se T (M2)                | raw fraction  | M2 se_T = 9.789070818e-05 | sqrt(v_U + v_T + 2 cov_UT) M3 = 9.789070818e-05 | max abs diff = 5.421e-20 | pass
+  1a fitted values               | ln(1 + share) | M2 fitted (all) vs M3 fitted (all) | max abs diff = 2.331e-18 | pass
+  1b r2                          | ln(1 + share) | M2 r2 = 0.1671645442 | M3 r2 = 0.1671645442 | max abs diff = 0.000e+00 | pass
+  2 coef S (M2) = coef U (M3)    | ln(1 + share) | M2 b_S = 0.0004321210427 | M3 b_U = 0.0004321210427 | max abs diff = 5.421e-19 | pass
+  3 coef T (M2) = b_U + b_T (M3) | ln(1 + share) | M2 b_T = 4.506012784e-05 | M3 b_U + b_T = 4.506012784e-05 | max abs diff = 0.000e+00 | pass
+  4 hc3 se T (M2)                | ln(1 + share) | M2 se_T = 9.768656996e-05 | sqrt(v_U + v_T + 2 cov_UT) M3 = 9.768656996e-05 | max abs diff = 4.066e-20 | pass
+
+------------------------------------------------------------------------
+COLLINEARITY (full sample, pairwise complete)
+------------------------------------------------------------------------
+  corr(S, T) = 0.2830, vif = 1.0870 (N = 102)
+  corr(U, T) = 0.8381, vif = 3.3604 (N = 102)
+
+------------------------------------------------------------------------
+RAW SHARE VS ln(1 + SHARE)
+------------------------------------------------------------------------
+  N = 102; largest abs difference = 1.298390e-05 (at MOZ, share = 0.005105); pearson r = 0.9999997604
+
+------------------------------------------------------------------------
+ROBUSTNESS SAMPLES FOR M1 AND M2
+------------------------------------------------------------------------
+  (a) matched urls >= 5: kept N = 58, dropped N = 44: BDI (0), BOL (0), DZA (0), GEO (0), GNB (0), MRT (0), TUN (0), AGO (1), AZE (1), BEN (1), BIH (1), BTN (1), CAF (1), FJI (1), GAB (1), GIN (1), KAZ (1), LAO (1), CIV (2), CRI (2), ECU (2), ERI (2), GMB (2), KGZ (2), LBY (2), MKD (2), MNG (2), PRY (2), SLE (2), TGO (2), UZB (2), ALB (3), ARM (3), DJI (3), FSM (3), JAM (3), NIC (3), PNG (3), TLS (3), GUY (4), MDG (4), SEN (4), TJK (4), VUT (4)
+  (b) matched urls >= 10: kept N = 45, dropped N = 57: BDI (0), BOL (0), DZA (0), GEO (0), GNB (0), MRT (0), TUN (0), AGO (1), AZE (1), BEN (1), BIH (1), BTN (1), CAF (1), FJI (1), GAB (1), GIN (1), KAZ (1), LAO (1), CIV (2), CRI (2), ECU (2), ERI (2), GMB (2), KGZ (2), LBY (2), MKD (2), MNG (2), PRY (2), SLE (2), TGO (2), UZB (2), ALB (3), ARM (3), DJI (3), FSM (3), JAM (3), NIC (3), PNG (3), TLS (3), GUY (4), MDG (4), SEN (4), TJK (4), VUT (4), MAR (5), TCD (5), CMR (6), LKA (6), NER (6), BWA (7), BFA (8), DOM (8), HND (8), MDA (8), TZA (8), IRQ (9), NAM (9)
+  (c) drop IRN ERI: kept N = 100, dropped N = 2: ERI (2), IRN (10)
+
+  (a) matched urls >= 5
+  M1   | raw fraction  | (a) matched urls >= 5      | N =  58 | ln(us_share)                  | beta_hat = +0.6122 | HC3 SE = 0.1844 | p = 0.0009 | R2 = 0.1664
+  M1   | ln(1 + share) | (a) matched urls >= 5      | N =  58 | ln(us_share)                  | beta_hat = +0.6112 | HC3 SE = 0.1840 | p = 0.0009 | R2 = 0.1666
+  M2   | raw fraction  | (a) matched urls >= 5      | N =  58 | ln(us_share)                  | beta_hat = +0.6093 | HC3 SE = 0.1647 | p = 0.0002 | R2 = 0.1864
+  M2   | raw fraction  | (a) matched urls >= 5      | N =  58 | ln(dac_gross_mean)            | beta_hat = -0.1768 | HC3 SE = 0.1820 | p = 0.3314 | R2 = 0.1864
+  M2   | ln(1 + share) | (a) matched urls >= 5      | N =  58 | ln(us_share)                  | beta_hat = +0.6083 | HC3 SE = 0.1643 | p = 0.0002 | R2 = 0.1866
+  M2   | ln(1 + share) | (a) matched urls >= 5      | N =  58 | ln(dac_gross_mean)            | beta_hat = -0.1764 | HC3 SE = 0.1816 | p = 0.3312 | R2 = 0.1866
+
+  (b) matched urls >= 10
+  M1   | raw fraction  | (b) matched urls >= 10     | N =  45 | ln(us_share)                  | beta_hat = +0.6482 | HC3 SE = 0.2061 | p = 0.0017 | R2 = 0.1853
+  M1   | ln(1 + share) | (b) matched urls >= 10     | N =  45 | ln(us_share)                  | beta_hat = +0.6471 | HC3 SE = 0.2057 | p = 0.0017 | R2 = 0.1855
+  M2   | raw fraction  | (b) matched urls >= 10     | N =  45 | ln(us_share)                  | beta_hat = +0.6688 | HC3 SE = 0.1611 | p = 0.0000 | R2 = 0.2352
+  M2   | raw fraction  | (b) matched urls >= 10     | N =  45 | ln(dac_gross_mean)            | beta_hat = -0.3126 | HC3 SE = 0.2277 | p = 0.1699 | R2 = 0.2352
+  M2   | ln(1 + share) | (b) matched urls >= 10     | N =  45 | ln(us_share)                  | beta_hat = +0.6677 | HC3 SE = 0.1607 | p = 0.0000 | R2 = 0.2354
+  M2   | ln(1 + share) | (b) matched urls >= 10     | N =  45 | ln(dac_gross_mean)            | beta_hat = -0.3118 | HC3 SE = 0.2272 | p = 0.1699 | R2 = 0.2354
+
+  (c) drop IRN ERI
+  M1   | raw fraction  | (c) drop IRN ERI           | N = 100 | ln(us_share)                  | beta_hat = +0.5036 | HC3 SE = 0.1136 | p = 0.0000 | R2 = 0.1725
+  M1   | ln(1 + share) | (c) drop IRN ERI           | N = 100 | ln(us_share)                  | beta_hat = +0.5027 | HC3 SE = 0.1133 | p = 0.0000 | R2 = 0.1726
+  M2   | raw fraction  | (c) drop IRN ERI           | N = 100 | ln(us_share)                  | beta_hat = +0.4850 | HC3 SE = 0.1228 | p = 0.0001 | R2 = 0.1772
+  M2   | raw fraction  | (c) drop IRN ERI           | N = 100 | ln(dac_gross_mean)            | beta_hat = +0.0676 | HC3 SE = 0.0984 | p = 0.4921 | R2 = 0.1772
+  M2   | ln(1 + share) | (c) drop IRN ERI           | N = 100 | ln(us_share)                  | beta_hat = +0.4841 | HC3 SE = 0.1226 | p = 0.0001 | R2 = 0.1773
+  M2   | ln(1 + share) | (c) drop IRN ERI           | N = 100 | ln(dac_gross_mean)            | beta_hat = +0.0676 | HC3 SE = 0.0982 | p = 0.4914 | R2 = 0.1773
+
+------------------------------------------------------------------------
+NEGATIVE BINOMIAL (model-based se)
+------------------------------------------------------------------------
+  NB S | count, log link | full                       | N = 102 | ln(us_share)                  | beta_hat = +0.5484 | model-based (MLE) SE = 0.1193 | p = 0.0000
+  NB S + T | count, log link | full                       | N = 102 | ln(us_share)                  | beta_hat = +0.5358 | model-based (MLE) SE = 0.1217 | p = 0.0000
+  NB S + T | count, log link | full                       | N = 102 | ln(dac_gross_mean)            | beta_hat = +0.0313 | model-based (MLE) SE = 0.0944 | p = 0.7400
+
+------------------------------------------------------------------------
+RAW VS LOG OUTCOME: SIGN AND SIGNIFICANCE (same model, sample and term)
+------------------------------------------------------------------------
+  M1 | full                       | ln(us_share)         | log +0.4473 (p 0.0000) | raw +0.4481 (p 0.0000) | same sign
+  M2 | full                       | ln(us_share)         | log +0.4321 (p 0.0001) | raw +0.4329 (p 0.0001) | same sign
+  M2 | full                       | ln(dac_gross_mean)   | log +0.0451 (p 0.6446) | raw +0.0451 (p 0.6453) | same sign
+  M3 | full                       | ln(us_gross_mean)    | log +0.4321 (p 0.0001) | raw +0.4329 (p 0.0001) | same sign
+  M3 | full                       | ln(dac_gross_mean)   | log -0.3871 (p 0.0233) | raw -0.3878 (p 0.0233) | same sign
+  M4 | full                       | ln(us_gross_mean)    | log +0.2125 (p 0.0002) | raw +0.2128 (p 0.0002) | same sign
+  M1 | (a) matched urls >= 5      | ln(us_share)         | log +0.6112 (p 0.0009) | raw +0.6122 (p 0.0009) | same sign
+  M2 | (a) matched urls >= 5      | ln(us_share)         | log +0.6083 (p 0.0002) | raw +0.6093 (p 0.0002) | same sign
+  M2 | (a) matched urls >= 5      | ln(dac_gross_mean)   | log -0.1764 (p 0.3312) | raw -0.1768 (p 0.3314) | same sign
+  M1 | (b) matched urls >= 10     | ln(us_share)         | log +0.6471 (p 0.0017) | raw +0.6482 (p 0.0017) | same sign
+  M2 | (b) matched urls >= 10     | ln(us_share)         | log +0.6677 (p 0.0000) | raw +0.6688 (p 0.0000) | same sign
+  M2 | (b) matched urls >= 10     | ln(dac_gross_mean)   | log -0.3118 (p 0.1699) | raw -0.3126 (p 0.1699) | same sign
+  M1 | (c) drop IRN ERI           | ln(us_share)         | log +0.5027 (p 0.0000) | raw +0.5036 (p 0.0000) | same sign
+  M2 | (c) drop IRN ERI           | ln(us_share)         | log +0.4841 (p 0.0001) | raw +0.4850 (p 0.0001) | same sign
+  M2 | (c) drop IRN ERI           | ln(dac_gross_mean)   | log +0.0676 (p 0.4914) | raw +0.0676 (p 0.4921) | same sign
+
+------------------------------------------------------------------------
+TABLE 1 RECOMPUTATION (102 sample countries)
+------------------------------------------------------------------------
+countries with missing gdp_avg: N = 2: SSD (South Sudan), ERI (Eritrea)
+
+  attention share, unique urls, percent
+    N = 102 (draft 102) ok
+    mean = 0.107294 (draft 0.107) ok
+    sd ddof=1 = 0.111622, ddof=0 = 0.111073 (draft 0.112) ddof=1 ok, ddof=0 DIFF
+    min = 0.000000 [TUN, GEO, BDI, BOL, MRT, DZA, GNB] (draft 0.000) ok
+    max = 0.510452 [MOZ] (draft 0.510) ok
+
+  matched usaid unique urls
+    N = 102 (draft 102) ok
+    mean = 18.401961 (draft 18.40) ok
+    sd ddof=1 = 26.325555, ddof=0 = 26.196190 (draft 26.30) ddof=1 DIFF, ddof=0 DIFF
+    min = 0.000000 [TUN, GEO, BDI, BOL, MRT, DZA, GNB] (draft 0.00) ok
+    max = 124.000000 [UKR] (draft 124.00) ok
+
+  total gdelt unique urls, thousands
+    N = 102 (draft 102) ok
+    mean = 29.276294 (draft 29.276) ok
+    sd ddof=1 = 71.389501, ddof=0 = 71.038691 (draft 71.390) ddof=1 ok, ddof=0 DIFF
+    min = 0.681000 [FSM] (draft 0.681) ok
+    max = 626.076000 [IND] (draft 626.076) ok
+
+  gross us oda, usd millions
+    N = 102 (draft 102) ok
+    mean = 248.984098 (draft 248.98) ok
+    sd ddof=1 = 356.672885, ddof=0 = 354.920182 (draft 356.67) ddof=1 ok, ddof=0 DIFF
+    min = 0.221680 [ERI] (draft 0.22) ok
+    max = 2187.074772 [UKR] (draft 2187.07) ok
+
+  gross dac oda, usd millions
+    N = 102 (draft 102) ok
+    mean = 781.283026 (draft 781.28) ok
+    sd ddof=1 = 886.774729, ddof=0 = 882.417088 (draft 886.77) ddof=1 ok, ddof=0 DIFF
+    min = 17.333141 [ERI] (draft 17.33) ok
+    max = 4563.848171 [UKR] (draft 4563.85) ok
+
+  us share of gross dac oda, percent
+    N = 102 (draft 102) ok
+    mean = 29.155224 (draft 29.16) ok
+    sd ddof=1 = 19.582744, ddof=0 = 19.486514 (draft 19.58) ddof=1 ok, ddof=0 DIFF
+    min = 0.833481 [IRN] (draft 0.83) ok
+    max = 91.751918 [LSO] (draft 91.75) ok
+
+  gross us oda / gdp, percent
+    N = 100 (draft 100) ok
+    mean = 1.159964 (draft 1.16) ok
+    sd ddof=1 = 2.998911, ddof=0 = 2.983878 (draft 3.00) ddof=1 ok, ddof=0 DIFF
+    min = 0.000449 [IRN] (draft 0.00) ok
+    max = 26.893827 [FSM] (draft 26.89) ok
+
+  gross dac oda / gdp, percent
+    N = 100 (draft 100) ok
+    mean = 2.920699 (draft 2.92) ok
+    sd ddof=1 = 4.515800, ddof=0 = 4.493164 (draft 4.52) ddof=1 ok, ddof=0 DIFF
+    min = 0.034038 [KAZ] (draft 0.03) ok
+    max = 30.542334 [FSM] (draft 30.54) ok
+
+  days to first recorded coverage
+    N = 95 (draft 95) ok
+    mean = 23.052632 (draft 23.10) DIFF
+    sd ddof=1 = 40.588587, ddof=0 = 40.374397 (draft 40.60) ddof=1 DIFF, ddof=0 DIFF
+    min = 1.000000 [UKR] (draft 1.00) ok
+    max = 253.000000 [CAF] (draft 253.00) ok
+
+------------------------------------------------------------------------
+TABLE 1: SENTENCE CHECKS
+------------------------------------------------------------------------
+  us share 'from less than 1% to nearly 92%': min = 0.8335%, max = 91.7519%; countries below 1%: N = 1 (IRN)
+  us share range: min below 1%: draft < 1%, ours 0.8335%: match
+  us share range: max 'nearly 92%': draft nearly 92%, ours 91.7519%: match
+  countries with us share below 1%: draft (not stated), ours 1
+  us aid min '$0.22 million': draft 0.22, ours 0.22: match
+  us aid max 'over $2.18 billion': draft > 2180 (usd millions), ours 2187.07: match
+  mean attention 0.107%: draft 0.107, ours 0.107: match
+  sd attention 0.112 percentage points: draft 0.112, ours 0.112: match
+  timing 'from 1 to 253 days' (min): draft 1, ours 1: match
+  timing 'from 1 to 253 days' (max): draft 253, ours 253: match
+  'average delay 23.1 days': draft 23.1, ours 23.1: match
+  countries with a first-article date: draft 95, ours 95: match
+  countries without matched coverage (usaid_articles_unique = 0): draft 7, ours 7: match
+    countries with usaid_articles_unique = 0: TUN, GEO, BDI, BOL, MRT, DZA, GNB
+    countries without a first-article date: TUN, GEO, BDI, BOL, MRT, DZA, GNB
+
+------------------------------------------------------------------------
+DRAFT TABLE 2 AND RESULTS TEXT
+------------------------------------------------------------------------
+  col 1 ln gross us oda (M4, log outcome): beta: draft 0.212, ours 0.212 (N 102): match
+  col 1 ln gross us oda (M4, log outcome): se: draft 0.057, ours 0.057 (N 102): match
+  col 1 ln gross us oda (M4, log outcome): r2: draft 0.115, ours 0.115 (N 102): match
+  col 1 ln gross us oda (M4, log outcome): N: draft 102, ours 102 (N 102): match
+  col 2 ln us share (M1, log outcome): beta: draft 0.447, ours 0.447 (N 102): match
+  col 2 ln us share (M1, log outcome): se: draft 0.099, ours 0.099 (N 102): match
+  col 2 ln us share (M1, log outcome): r2: draft 0.165, ours 0.165 (N 102): match
+  col 3 ln us share (M2, log outcome): beta: draft 0.432, ours 0.432 (N 102): match
+  col 3 ln us share (M2, log outcome): se: draft 0.110, ours 0.110 (N 102): match
+  col 3 ln us share (M2, log outcome): r2: draft 0.167, ours 0.167 (N 102): match
+  col 3 ln gross dac oda (M2, log outcome): beta: draft 0.045, ours 0.045 (N 102): match
+  col 3 ln gross dac oda (M2, log outcome): se: draft 0.098, ours 0.098 (N 102): match
+  col 3 ln gross dac oda (M2, log outcome): p: draft 0.645, ours 0.645 (N 102): match
+  untransformed: ln us share, baseline (M1, raw): beta: draft 0.448, ours 0.448 (N 102): match
+  untransformed: ln us share, with total dac (M2, raw): beta: draft 0.433, ours 0.433 (N 102): match
+  restriction >= 5: ln us share (M1, raw fraction): beta: draft 0.611, ours 0.612 (N 58): MISMATCH
+  restriction >= 5: ln us share (M1, raw fraction): p: draft < 0.001, ours 0.000900 (N 58): match
+  restriction >= 10: ln us share (M1, raw fraction): beta: draft 0.647, ours 0.648 (N 45): MISMATCH
+  restriction >= 10: ln us share (M1, raw fraction): p: draft 0.002, ours 0.002 (N 45): match
+  restriction >= 5: ln us share (M1, ln(1 + share)): beta: draft 0.611, ours 0.611 (N 58): match
+  restriction >= 5: ln us share (M1, ln(1 + share)): p: draft < 0.001, ours 0.000893 (N 58): match
+  restriction >= 10: ln us share (M1, ln(1 + share)): beta: draft 0.647, ours 0.647 (N 45): match
+  restriction >= 10: ln us share (M1, ln(1 + share)): p: draft 0.002, ours 0.002 (N 45): match
+  timing: ln us share (M1, days): beta: draft -0.096, ours -0.096 (N 95): match
+  timing: ln us share (M1, days): p: draft 0.330, ours 0.330 (N 95): match
+  timing: ln us share (M1, days): N: draft 95, ours 95 (N 95): match
+  note: the draft does not say which attention outcome the >= 5 and >= 10 rows use; both are compared.
+
+------------------------------------------------------------------------
+TABLE 2, RAW OUTCOME (ln(1 + share) in extra columns), per 1,000, HC3
+------------------------------------------------------------------------
+  (1) ln(US aid)                               | full                   | N = 102 | raw +0.213 (0.057) p 0.0002 | log +0.212 (0.057) p 0.0002
+  (2) ln(US share)                             | full                   | N = 102 | raw +0.448 (0.100) p 0.0000 | log +0.447 (0.099) p 0.0000
+  (2) ln(US share)                             | (a) matched urls >= 5  | N =  58 | raw +0.612 (0.184) p 0.0009 | log +0.611 (0.184) p 0.0009
+  (2) ln(US share)                             | (b) matched urls >= 10 | N =  45 | raw +0.648 (0.206) p 0.0017 | log +0.647 (0.206) p 0.0017
+  (2) ln(US share)                             | (c) drop IRN ERI       | N = 100 | raw +0.504 (0.114) p 0.0000 | log +0.503 (0.113) p 0.0000
+  (3) ln(US share) + ln(total gross DAC aid)   | full                   | N = 102 | raw +0.433 (0.110) p 0.0001 | log +0.432 (0.110) p 0.0001 | total dac raw +0.045 (0.098) p 0.6453, log p 0.6446
+  (3) ln(US share) + ln(total gross DAC aid)   | (a) matched urls >= 5  | N =  58 | raw +0.609 (0.165) p 0.0002 | log +0.608 (0.164) p 0.0002 | total dac raw -0.177 (0.182) p 0.3314, log p 0.3312
+  (3) ln(US share) + ln(total gross DAC aid)   | (b) matched urls >= 10 | N =  45 | raw +0.669 (0.161) p 0.0000 | log +0.668 (0.161) p 0.0000 | total dac raw -0.313 (0.228) p 0.1699, log p 0.1699
+  (3) ln(US share) + ln(total gross DAC aid)   | (c) drop IRN ERI       | N = 100 | raw +0.485 (0.123) p 0.0001 | log +0.484 (0.123) p 0.0001 | total dac raw +0.068 (0.098) p 0.4921, log p 0.4914
+
+wrote results.csv (34 rows), equivalence.csv (12 rows), table1_check.csv (9 rows), draft_check.csv (38 rows), table2_raw.csv (9 rows)

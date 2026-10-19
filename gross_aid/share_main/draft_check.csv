@@ -1,0 +1,39 @@
+item,draft_value,our_value,match
+table 1 text: us share range: min below 1%,< 1%,0.8335%,match
+table 1 text: us share range: max 'nearly 92%',nearly 92%,91.7519%,match
+table 1 text: countries with us share below 1%,(not stated),1,
+table 1 text: us aid min '$0.22 million',0.22,0.22,match
+table 1 text: us aid max 'over $2.18 billion',> 2180 (usd millions),2187.07,match
+table 1 text: mean attention 0.107%,0.107,0.107,match
+table 1 text: sd attention 0.112 percentage points,0.112,0.112,match
+table 1 text: timing 'from 1 to 253 days' (min),1,1,match
+table 1 text: timing 'from 1 to 253 days' (max),253,253,match
+table 1 text: 'average delay 23.1 days',23.1,23.1,match
+table 1 text: countries with a first-article date,95,95,match
+table 1 text: countries without matched coverage (usaid_articles_unique = 0),7,7,match
+"table 2 / text: col 1 ln gross us oda (M4, log outcome): beta",0.212,0.212,match
+"table 2 / text: col 1 ln gross us oda (M4, log outcome): se",0.057,0.057,match
+"table 2 / text: col 1 ln gross us oda (M4, log outcome): r2",0.115,0.115,match
+"table 2 / text: col 1 ln gross us oda (M4, log outcome): N",102,102,match
+"table 2 / text: col 2 ln us share (M1, log outcome): beta",0.447,0.447,match
+"table 2 / text: col 2 ln us share (M1, log outcome): se",0.099,0.099,match
+"table 2 / text: col 2 ln us share (M1, log outcome): r2",0.165,0.165,match
+"table 2 / text: col 3 ln us share (M2, log outcome): beta",0.432,0.432,match
+"table 2 / text: col 3 ln us share (M2, log outcome): se",0.110,0.110,match
+"table 2 / text: col 3 ln us share (M2, log outcome): r2",0.167,0.167,match
+"table 2 / text: col 3 ln gross dac oda (M2, log outcome): beta",0.045,0.045,match
+"table 2 / text: col 3 ln gross dac oda (M2, log outcome): se",0.098,0.098,match
+"table 2 / text: col 3 ln gross dac oda (M2, log outcome): p",0.645,0.645,match
+"table 2 / text: untransformed: ln us share, baseline (M1, raw): beta",0.448,0.448,match
+"table 2 / text: untransformed: ln us share, with total dac (M2, raw): beta",0.433,0.433,match
+"table 2 / text: restriction >= 5: ln us share (M1, raw fraction): beta",0.611,0.612,mismatch
+"table 2 / text: restriction >= 5: ln us share (M1, raw fraction): p",< 0.001,0.000900,match
+"table 2 / text: restriction >= 10: ln us share (M1, raw fraction): beta",0.647,0.648,mismatch
+"table 2 / text: restriction >= 10: ln us share (M1, raw fraction): p",0.002,0.002,match
+"table 2 / text: restriction >= 5: ln us share (M1, ln(1 + share)): beta",0.611,0.611,match
+"table 2 / text: restriction >= 5: ln us share (M1, ln(1 + share)): p",< 0.001,0.000893,match
+"table 2 / text: restriction >= 10: ln us share (M1, ln(1 + share)): beta",0.647,0.647,match
+"table 2 / text: restriction >= 10: ln us share (M1, ln(1 + share)): p",0.002,0.002,match
+"table 2 / text: timing: ln us share (M1, days): beta",-0.096,-0.096,match
+"table 2 / text: timing: ln us share (M1, days): p",0.330,0.330,match
+"table 2 / text: timing: ln us share (M1, days): N",95,95,match

@@ -391,3 +391,69 @@ ODA); `FLOW_TYPE` D (disbursements); `PRICE_BASE` Q (constant prices),
 of that `beta_hat` is the same as the sign of `net_beta_hat`. `note` as in
 section 8.3.
 
+## 9. US share as the central regressor (`gross_aid/share_main/`)
+
+Specification: `gross_aid/share_main/SPEC.md`, revised after the first run
+to remove models that were not requested by the co-author (original
+SHA-256 `50ed8c2832a7f5ba14d3e931f2ee5db95bf4bad50e2c73673ff58372aee985fa`, new SHA-256
+`118cfa564367e75dc5d314626b03b548708791a8c5a1f6092a11c35beac4eea0`). The attention outcome is
+international news attention associated with a country's event geography
+(GDELT assigns events by event location, `ActionGeo_CountryCode`). S =
+ln(`us_share`), T = ln(`dac_gross_mean`), U = ln(`us_gross_mean`); aid as in section 8.2.
+
+### 9.1 `results.csv` (34 rows: one per model and coefficient, intercept left out)
+
+| Column | Unit / meaning |
+|---|---|
+| `model` | M1 to M4 (OLS), `NB S`, `NB S + T` (negative binomial) (see the spec) |
+| `outcome` | attention share, unique urls (main or robustness); days to first article (M1, full sample only); unique matched urls (count) |
+| `outcome_transform` | `raw fraction` (`usaid_articles_unique` / `total_articles_unique_url`), `ln(1 + share)`, `ln(1 + days)`, `count, log link` |
+| `sample` | `full`, `(a) matched urls >= 5`, `(b) matched urls >= 10` (both select on the attention outcome), `(c) drop IRN ERI` |
+| `N` | number of countries in the model |
+| `term` | `ln(us_share)`, `ln(dac_gross_mean)` or `ln(us_gross_mean)` |
+| `beta_hat`, `se` | coefficient and standard error; times 1,000 for both attention outcomes, not scaled otherwise (said in `note`) |
+| `se_type` | `HC3` (OLS) or `model-based (MLE)` (negative binomial) |
+| `p` | two-sided p-value |
+| `r2` | R-squared (OLS only, empty otherwise) |
+| `note` | scaling, aid definition and sample notes |
+
+### 9.2 `equivalence.csv` (12 rows)
+
+| Column | Unit / meaning |
+|---|---|
+| `check` | `1a fitted values`, `1b r2`, `2 coef S (M2) = coef U (M3)`, `3 coef T (M2) = b_U + b_T (M3)`, `4 hc3 se T (M2)` (each per attention outcome), or `collinearity corr(S, T)` and `collinearity corr(U, T)` |
+| `outcome` | outcome transform (empty for collinearity) |
+| `N` | number of countries |
+| `quantity_a`, `value_a`, `quantity_b`, `value_b` | the two numbers compared, unscaled (empty for the fitted values, which are compared over all countries); for collinearity, pearson r and vif = 1 / (1 - r^2) |
+| `max_abs_diff`, `tolerance`, `result` | max absolute difference, 1e-8, `pass` or `fail` |
+| `note` | units |
+
+### 9.3 `table1_check.csv` (9 rows, one per Table 1 variable of the paper draft)
+
+`variable`; `N`, `mean`, `sd` (ddof = 1), `sd_ddof0`, `min`, `max` (in the
+unit of the variable name: percent, thousands or USD millions);
+`min_country`, `max_country` (ISO3, ties listed); `draft_N`, `draft_mean`,
+`draft_sd`, `draft_min`, `draft_max` (draft values as text);
+`match_N`, `match_mean`, `match_sd`, `match_min`, `match_max`,
+`match_sd_ddof0` (True if our value rounded to the draft's decimals equals
+the draft value); `all_match`. Aid / GDP = aid x 1e6 / `gdp_avg` x 100
+(section 1.4; SSD and ERI have no `gdp_avg`).
+
+### 9.4 `draft_check.csv`
+
+`item` (Table 1 sentence, Table 2 cell or results-text number, with the
+model and outcome used); `draft_value` (text); `our_value` (rounded to the
+draft's decimals); `match` (`match`, `mismatch`, or empty when the draft
+states no value).
+
+### 9.5 `table2_raw.csv` (9 rows: one per model and sample)
+
+Made from rows of `results.csv`, no new model. `model`: `(1) ln(US aid)`
+(M4, full sample only), `(2) ln(US share)` (M1), `(3) ln(US share) +
+ln(total gross DAC aid)` (M2); `sample` as in section 9.1 (models (2) and
+(3) in all four samples); `main_term` (the first regressor). Then for the
+raw share (prefix `raw_`) and for ln(1 + share) (prefix `log_`): `N`,
+`r2`, `beta`, `se`, `p` of the main term and `beta_total_dac`,
+`se_total_dac`, `p_total_dac` (model (3) only, empty otherwise). beta and
+se times 1,000, HC3 se. `note`: units, and that the total-aid p-values are
+included for all samples.
