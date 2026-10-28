@@ -1,0 +1,7 @@
+variable,version,N,mean,s,min,max,min_country,max_country
+"gross us oda / gdp, percent",old: current usd gdp,100,1.1599638841258524,2.9989106884550356,0.00044894285855229645,26.89382698302846,IRN,FSM
+"gross us oda / gdp, percent","first run primary: constant 2024 usd gdp, us factor",100,0.99644425128651,2.5755269238915757,0.0003866739292905,23.11571371366181,IRN,FSM
+"gross us oda / gdp, percent","final: current aid / current gdp per year, mean",100,1.0061336665652052,2.607599189811587,0.0003460397647679282,23.400931816773422,IRN,FSM
+"gross dac oda / gdp, percent",old: current usd gdp,100,2.9206993112142077,4.515800159983509,0.03403766789519786,30.542333754500028,KAZ,FSM
+"gross dac oda / gdp, percent","first run primary: constant 2024 usd gdp, us factor",100,2.5106580742409235,3.876963735180337,0.0293625585763379,26.251668967070525,KAZ,FSM
+"gross dac oda / gdp, percent","final: current aid / current gdp per year, mean",100,2.6941014617370254,4.094181882303041,0.03015886101769938,27.380881794434575,KAZ,FSM

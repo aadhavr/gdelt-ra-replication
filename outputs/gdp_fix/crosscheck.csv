@@ -1,0 +1,3 @@
+variable,N,dac_factor_rel_diff_median,dac_factor_rel_diff_min,dac_factor_rel_diff_max,current_route_rel_diff_median,current_route_abs_rel_diff_median,current_route_rel_diff_min,current_route_rel_diff_max,current_route_rel_diff_min_country,current_route_rel_diff_max_country,pearson_r_log_primary_vs_current
+"gross us oda / gdp, percent",100,0.06878139917941384,0.05386381669338336,0.10007583874059134,0.0038984631613190324,0.0081533771757335,-0.1684358042865456,0.25450984856364656,YEM,LBN,0.9997004373028872
+"gross dac oda / gdp, percent",100,0.06878139917941373,0.05386381669338336,0.10007583874059112,0.07554385604635638,0.07626950708881153,-0.10099779783378116,0.402374438154961,YEM,CUB,0.9986775260651048

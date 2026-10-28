@@ -1,0 +1,19 @@
+item,expected,got,match
+table 1 us_gdp,"(100, '1.16', '3.00', '0.00', '26.89')","(100, '1.16', '3.00', '0.00', '26.89')",True
+table 1 dac_gdp,"(100, '2.92', '4.52', '0.03', '30.54')","(100, '2.92', '4.52', '0.03', '30.54')",True
+G7 days | net | log_days | log_disbursements,gross_aid/results.csv,"N 91, beta_hat -0.114551, se 0.081785, p 0.161324, r2 0.217618",True
+G7 attention | net | log_attention_share_unique | log_disbursements,gross_aid/results.csv,"N 98, beta_hat 0.307516, se 0.083365, p 0.000225314, r2 0.270843",True
+G7 days | gross | log_days | log_us_gross,gross_aid/results.csv,"N 93, beta_hat -0.108915, se 0.077060, p 0.157547, r2 0.222954",True
+G7 attention | gross | log_attention_share_unique | log_us_gross,gross_aid/results.csv,"N 100, beta_hat 0.297240, se 0.081808, p 0.000279744, r2 0.267425",True
+G8 | B3 levels on the gdp sample | log_days | log_us_gross,gross_aid/followup/results.csv,"N 93, beta_hat 0.001782, se 0.097651, p 0.985444, r2 0.226342",True
+G8 | B3 levels on the gdp sample | log_days | log_dac_gross,gross_aid/followup/results.csv,"N 93, beta_hat -0.296884, se 0.118043, p 0.0119012, r2 0.226342",True
+G8 | B3 aid / gdp | log_days | log_us_gdp,gross_aid/followup/results.csv,"N 93, beta_hat -0.089666, se 0.121726, p 0.46135, r2 0.014417",True
+G8 | B3 aid / gdp | log_days | log_dac_gdp,gross_aid/followup/results.csv,"N 93, beta_hat 0.128584, se 0.196917, p 0.513766, r2 0.014417",True
+G9 log us_share | B3 aid / gdp | log_days | log_us_share,gross_aid/followup/results.csv,"N 93, beta_hat -0.074230, se 0.105978, p 0.48366, r2 0.009321",True
+G9 ratio | B3 aid / gdp | log_days | log_us_gdp,gross_aid/followup/results.csv,"N 93, beta_hat -0.006668, se 0.053034, p 0.899946, r2 0.000296",True
+G8 | B3 levels on the gdp sample | log_attention_share_unique | log_us_gross,gross_aid/followup/results.csv,"N 100, beta_hat 0.448312, se 0.111369, p 5.68609e-05, r2 0.171417",True
+G8 | B3 levels on the gdp sample | log_attention_share_unique | log_dac_gross,gross_aid/followup/results.csv,"N 100, beta_hat -0.395296, se 0.171097, p 0.0208678, r2 0.171417",True
+G8 | B3 aid / gdp | log_attention_share_unique | log_us_gdp,gross_aid/followup/results.csv,"N 100, beta_hat 0.349920, se 0.087131, p 5.91918e-05, r2 0.266837",True
+G8 | B3 aid / gdp | log_attention_share_unique | log_dac_gdp,gross_aid/followup/results.csv,"N 100, beta_hat -0.084822, se 0.104378, p 0.416419, r2 0.266837",True
+G9 log us_share | B3 aid / gdp | log_attention_share_unique | log_us_share,gross_aid/followup/results.csv,"N 100, beta_hat 0.462115, se 0.102336, p 6.31147e-06, r2 0.168418",True
+G9 ratio | B3 aid / gdp | log_attention_share_unique | log_us_gdp,gross_aid/followup/results.csv,"N 100, beta_hat 0.296856, se 0.057883, p 2.91921e-07, r2 0.264186",True

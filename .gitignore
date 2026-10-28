@@ -21,3 +21,11 @@ data/raw/*
 !data/raw/MANIFEST.csv
 # data/input/ cannot be covered by a size rule. before `git add`, run:
 #   find data -type f -size +25000k
+
+# raw OECD pull (terms not checked, see readme)
+data/raw_oecd_pull/
+outputs/gdp_fix/oda_current_by_year.csv
+
+# raw OECD pull (terms not checked, see readme)
+data/raw_oecd_pull/
+outputs/gdp_fix/oda_current_by_year.csv
