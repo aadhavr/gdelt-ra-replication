@@ -331,3 +331,27 @@ V-Dem raw CSV).
 | `gross_aid/share_main/SPEC.md` | share main: specification, written before any model ran, revised after the first run to remove models that were not requested by the co-author (original SHA-256 `50ed8c2832a7f5ba14d3e931f2ee5db95bf4bad50e2c73673ff58372aee985fa`, new SHA-256 `118cfa564367e75dc5d314626b03b548708791a8c5a1f6092a11c35beac4eea0`) |
 | `gross_aid/share_main/run_share_main.py` | share main: untransformed attention share as the main outcome (international news attention associated with a country's event geography), log US share of gross DAC aid as the central regressor; M1 to M4 on attention, M1 on days, robustness samples for M1 and M2 on attention, negative binomial for S and S + T, the M2 and M3 equivalence, the Table 1 recomputation, the draft check and the draft Table 2 layout with the raw outcome |
 | `gross_aid/share_main/results.csv`, `equivalence.csv`, `table1_check.csv`, `draft_check.csv`, `table2_raw.csv`, `log.txt` | share main: outputs of `run_share_main.py` (overwritten on each run) |
+
+## 7. New files after the inventory: `fix_gdp/`
+
+| Path | What it is |
+|---|---|
+| `fix_gdp/common.py` | gdp fix: shared loader and model helpers, lines copied from `gross_aid/run_gross_aid.py` and the followup; writes nothing |
+| `fix_gdp/reproduce_current.py` | gdp fix step 1: reproduces the current Table 1 aid / GDP rows and the G7, B3 G8 and B3 G9 results with the snapshot `gdp_avg` |
+| `fix_gdp/fetch_wdi_gdp.py` | gdp fix step 2a: downloads yearly WDI `NY.GDP.MKTP.CD` (current USD), 2018-2022, for the 102 sample countries |
+| `fix_gdp/pull_oecd.py` | gdp fix step 2b: one SDMX call to `sdmx.oecd.org` for DAC2A gross ODA (measure 240), USA and DAC total, price bases Q and V, 2018-2022 |
+| `fix_gdp/build_gdp_constant.py` | gdp fix steps 2b to 2e: checks the new pull against `aid_gross_2018_2022.csv`, makes the Q / V conversion factors and GDP in constant 2024 USD |
+| `fix_gdp/compare_old_new.py` | gdp fix step 3: Table 1 aid / GDP rows and the GDP models, old vs constant 2024 USD GDP, plus the DAC-factor and current-price cross-checks |
+| `fix_gdp/report_tables.py` | gdp fix step 4: markdown tables for `REPORT.md` from the step 3 files |
+| `fix_gdp/final_current_ratio.py` | gdp fix, final: current-price gross ODA / current-price GDP per year, mean over 2018-2022; checks, Table 1 rows, B3 G8 / G9 reruns, G7 checked unchanged |
+| `data/raw_oecd_pull/dac2a_usa_dac_240_QV_2018_2022.csv`, `.query.txt` | gdp fix: raw OECD response and its query record, written by `pull_oecd.py`; not in the repo (`.gitignore`; OECD redistribution terms not checked) |
+| `outputs/gdp_fix/reproduce_current.csv` | gdp fix: output of `reproduce_current.py` |
+| `outputs/gdp_fix/wdi_gdp_current_2018_2022.csv` | gdp fix: output of `fetch_wdi_gdp.py` |
+| `outputs/gdp_fix/pull_check_yearly.csv`, `conversion_factors.csv`, `gdp_constant_2024.csv` | gdp fix: outputs of `build_gdp_constant.py` |
+| `outputs/gdp_fix/oda_current_by_year.csv` | gdp fix: output of `build_gdp_constant.py`, made from the raw OECD pull; not in the repo (`.gitignore`) |
+| `outputs/gdp_fix/pull_check.csv` | gdp fix: record of a first, stricter run of `build_gdp_constant.py` that stopped; no current script writes it |
+| `outputs/gdp_fix/table1_old_new.csv`, `ratio_changes.csv`, `models_old_new.csv`, `crosscheck.csv` | gdp fix: outputs of `compare_old_new.py` |
+| `outputs/gdp_fix/report_tables.md` | gdp fix: output of `report_tables.py` |
+| `outputs/gdp_fix/table1_final.csv`, `models_final.csv`, `final_tables.md` | gdp fix: outputs of `final_current_ratio.py` |
+| `outputs/gdp_fix/usage_map.md`, `REPORT.md`, `REPORT_final.md` | gdp fix: where `gdp_avg` is used; report on the constant 2024 USD method; report on the final current-price method |
+| `outputs/gdp_fix/crosswalk_check.md` | read-only check of the blank FIPS cell of Aland in `country-codes.csv` (no file changed) |

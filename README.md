@@ -190,7 +190,7 @@ Full column lists with units: [DATA_DICTIONARY.md](DATA_DICTIONARY.md).
 | `data/input/3-29-v2_oda_data.csv` | Made from the aid spreadsheet below (rebuilt by `04b`). 102 countries. | `us_oda_disbursements`: US aid, USD millions (definition still to be confirmed). `attention_share`: matched rows ÷ all GDELT rows for the country. `days_to_first_article`: days from 20 January 2025 to the first matched row (empty = no match). |
 | `data/input/3_29__oda_data.csv` and `.xlsx` | Aid spreadsheet compiled for the project. Its header names OECD DAC2A (measure 206), 2018–2022, as the aid source. | 143 countries; aid and GDELT columns. |
 | `data/input/country-codes.csv` | Country-code crosswalk. The project files do not record where it came from. | `FIPS` (the code GDELT uses) → `ISO3166-1-Alpha-3`; UN region names. |
-| `data/input/wdi_population_gdp.csv` | World Bank WDI, downloaded 2026-10-05 (see attribution below). No script reads it; it is a frozen copy. | `population_avg`, `gdp_avg` (current USD), mean of 2018–2022. |
+| `data/input/wdi_population_gdp.csv` | World Bank WDI, downloaded 2026-10-05 (see attribution below). A frozen copy. Read by `fix_gdp/common.py` (its `load()`, used by `reproduce_current.py`, `compare_old_new.py` and `final_current_ratio.py`) and by `fix_gdp/fetch_wdi_gdp.py`; also by `gross_aid/run_gross_aid.py`, `gross_aid/followup/run_followup.py`, `gross_aid/share_main/run_share_main.py` and the two scripts in `exploratory/us_specific_aid/`. | `population_avg`, `gdp_avg` (current USD), mean of 2018–2022. |
 | `data/intermediate/usaid_closure_v1/matches_rows.csv` | Made by `02_search.py` from GDELT 1.0. 12,017 rows. | `date` plus the 58 GDELT columns (`col_0` … `col_57`). `col_51` = country of the event location; `col_57` = article URL. |
 | `data/intermediate/country_reaction_dataset.csv` | Made by `04_build_dataset.py`. 236 countries. | `total_articles`, `usaid_articles` (GDELT row counts), `attention_share`, `days_to_first_article`. |
 | `data/intermediate/total_articles_unique_url.csv` | Made by `phase3_dedup_full_corpus.py`. 236 countries. | `total_articles_unique_url`: unique article URLs per country. |
@@ -272,6 +272,14 @@ out, and the Cox models censor them at 365 days. IRN has 2 and ERI has 3
 years of US data; a missing year counts as 0. The Cox and negative binomial
 models use model-based standard errors, as in Tables B2 and B3.
 
+GDP. The stored results for G7 (`gross_aid/results.csv`) and for the B3
+versions of G8 and G9 (`gross_aid/followup/results.csv`) use the earlier
+GDP. The values with the corrected ratio are in
+`outputs/gdp_fix/models_final.csv`. There, G7 is unchanged, because it uses
+ln(`gdp_avg`) as a control and not the aid / GDP ratio; the B3 G8 levels and
+G9 log us_share models are also unchanged, because they use GDP only to
+choose the sample. The conclusions do not change.
+
 US share as the central regressor (`gross_aid/share_main/`). Not in the
 paper. The outcome here is international news attention associated with a
 country's event geography (GDELT assigns events by event location,
@@ -289,3 +297,47 @@ co-author (original SHA-256 `50ed8c2832a7f5ba14d3e931f2ee5db95bf4bad50e2c73673ff
 `118cfa564367e75dc5d314626b03b548708791a8c5a1f6092a11c35beac4eea0`). Run `python gross_aid/share_main/run_share_main.py`
 from the repository root. It stops if a spec hash or a log-version
 pre-check does not match.
+
+---
+
+## GDP price base (Table 1)
+
+Table 1's aid/GDP rows use current-price gross ODA and current-price GDP in
+each year, averaged over 2018 to 2022. See `fix_gdp/` and
+`outputs/gdp_fix/REPORT_final.md`. `gross_aid/share_main/run_share_main.py`
+still computes these two rows from the earlier GDP snapshot (constant 2024
+USD aid divided by current USD GDP: US 1.16, DAC 2.92). Those values are
+superseded. The current values are US 1.01 and DAC 2.69.
+
+### How to run `fix_gdp/`
+
+Run the scripts from inside `fix_gdp/` (they import `common.py`), in this
+order. Each script stops if one of its output files already exists, so move
+the existing outputs away before a rerun.
+
+| # | Script | What it does | Writes |
+|---|---|---|---|
+| 1 | `reproduce_current.py` | Reproduces the old Table 1 aid / GDP rows and the G7, B3 G8 and B3 G9 results with the snapshot `gdp_avg`. Stops if a value does not match. | `outputs/gdp_fix/reproduce_current.csv` |
+| 2 | `fetch_wdi_gdp.py` | Downloads yearly WDI `NY.GDP.MKTP.CD` (current USD), 2018-2022, for the 102 sample countries and compares the mean with the snapshot. | `outputs/gdp_fix/wdi_gdp_current_2018_2022.csv` |
+| 3 | `pull_oecd.py` | One SDMX call for OECD DAC2A gross ODA (measure 240, USD), donors USA and DAC total, price bases Q (constant 2024) and V (current), all recipients, 2018-2022. No retries. | `data/raw_oecd_pull/dac2a_usa_dac_240_QV_2018_2022.csv` (raw response) and `.query.txt` (URL, time, status) |
+| 4 | `build_gdp_constant.py` | Checks the Q pull against `data/intermediate/aid_gross_2018_2022.csv` and the two `data/raw/oecd_gross_*` files, makes the Q / V conversion factors and GDP in constant 2024 USD. | `outputs/gdp_fix/pull_check_yearly.csv`, `conversion_factors.csv`, `gdp_constant_2024.csv`, `oda_current_by_year.csv` |
+| 5 | `compare_old_new.py` | Table 1 aid / GDP rows and the GDP models, old GDP vs constant 2024 USD GDP, plus the DAC-factor and current-price cross-checks. | `outputs/gdp_fix/table1_old_new.csv`, `ratio_changes.csv`, `models_old_new.csv`, `crosscheck.csv` |
+| 6 | `report_tables.py` | Markdown tables for `REPORT.md` from the step 5 files (no new computation). | `outputs/gdp_fix/report_tables.md` |
+| 7 | `final_current_ratio.py` | Final method: current-price gross ODA / current-price GDP per year, mean over 2018-2022. Runs checks first (stops on any failure), then the Table 1 rows and the B3 G8 / G9 reruns; checks that G7 is unchanged. No network call. | `outputs/gdp_fix/table1_final.csv`, `models_final.csv`, `final_tables.md` |
+
+`common.py` holds the shared loader and model helpers and writes nothing.
+`REPORT.md` (steps 1 to 6) and `REPORT_final.md` (step 7) were written from
+these outputs. `outputs/gdp_fix/pull_check.csv` is the record of a first,
+stricter run of step 4 that stopped; no current script writes it.
+
+Network use. `fetch_wdi_gdp.py` calls the World Bank API
+(`api.worldbank.org`). `pull_oecd.py` calls the OECD SDMX API
+(`sdmx.oecd.org`), which may limit the number of queries per hour; the script
+makes one call and does not retry. All other steps read files on disk only.
+
+The raw OECD pull is saved in `data/raw_oecd_pull/` and is not in the
+repository, because the OECD redistribution terms were not checked.
+`.gitignore` also leaves out `outputs/gdp_fix/oda_current_by_year.csv`,
+which is made from that pull. Steps 5 and 7 read it, so run steps 3 and 4
+first on a fresh copy. Step 4 also needs the two OECD files in `data/raw/`
+(see the gross aid section above).

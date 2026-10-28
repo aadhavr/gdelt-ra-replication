@@ -87,8 +87,15 @@ Other columns (not used): `FIFA`, `Dial`, `MARC`, `is_independent`,
 
 ### 1.4 `wdi_population_gdp.csv` (shipped; 102 rows; frozen snapshot)
 Written by `robustness/analysis.py` on 2026-10-05 from the World Bank
-API. No script reads this file; the v5 scripts download WDI again.
+API. The v5 scripts download WDI again and do not read this file. It is
+read by the `gross_aid/` scripts, the `exploratory/us_specific_aid/`
+scripts and `fix_gdp/` (`common.py` and `fetch_wdi_gdp.py`).
 Source: World Bank, World Development Indicators, CC BY 4.0 (see README.md).
+
+Note: `gdp_avg` is in current USD. Table 1's aid / GDP rows no longer use
+it: they now use current-price gross ODA over current-price GDP in each
+year, averaged over 2018-2022 (see `fix_gdp/` and section 10). G7 and the
+B3 sample rule still use `gdp_avg`.
 
 | Column | Unit / meaning |
 |---|---|
@@ -457,3 +464,190 @@ raw share (prefix `raw_`) and for ln(1 + share) (prefix `log_`): `N`,
 `se_total_dac`, `p_total_dac` (model (3) only, empty otherwise). beta and
 se times 1,000, HC3 se. `note`: units, and that the total-aid p-values are
 included for all samples.
+
+## 10. GDP price-base fix (`outputs/gdp_fix/`, `data/raw_oecd_pull/`)
+
+Made by the scripts in `fix_gdp/` (run order: README.md, "How to run
+`fix_gdp/`"). Aid / GDP ratios are in percent. "Old" = the snapshot
+`gdp_avg` (section 1.4, current USD) with gross aid in constant 2024 USD
+(section 8.2). All regressions are OLS with HC3 standard errors.
+
+### 10.1 `data/raw_oecd_pull/dac2a_usa_dac_240_QV_2018_2022.csv` (NOT shipped; 4,294 rows)
+
+Raw response of `fix_gdp/pull_oecd.py`, as received from `sdmx.oecd.org`
+(OECD DAC2A, `OECD.DCD.FSD:DSD_DAC2@DF_DAC2A(1.7)`). One row per donor,
+recipient, price base and year. Each code column is followed by a label
+column with the same name in words.
+
+| Column | Unit / meaning |
+|---|---|
+| `STRUCTURE`, `STRUCTURE_ID`, `STRUCTURE_NAME` | `DATAFLOW`, `OECD.DCD.FSD:DSD_DAC2@DF_DAC2A(1.7)`, `DAC2A: Aid (ODA) disbursements to countries and regions` (the same on every row) |
+| `ACTION` | `I` on every row |
+| `DONOR`, `Donor` | `USA` (United States, 1,980 rows) or `DAC` (DAC countries total, 2,314 rows) |
+| `RECIPIENT`, `Recipient` | ISO3 code or an aggregate code (236 codes; `DPGC` = developing countries total) |
+| `MEASURE`, `Measure` | 240, Gross ODA |
+| `UNIT_MEASURE`, `Unit of measure` | `USD`, US dollar |
+| `PRICE_BASE`, `Price base` | `Q` = constant prices, `V` = current prices (2,147 rows each) |
+| `TIME_PERIOD` | year, 2018 to 2022 (`Time period` is empty) |
+| `OBS_VALUE` | the value, USD millions (`Observation value` is empty) |
+| `BASE_PER` | 2024 for `Q` rows, empty for `V` rows (`Base period` is empty) |
+| `UNIT_MULT`, `Unit multiplier` | 6, Millions |
+| `FLOW_TYPE`, `Flow type` | `D`, Disbursements |
+| `OBS_STATUS`, `Observation status` | `A`, Normal value |
+
+### 10.2 `data/raw_oecd_pull/dac2a_usa_dac_240_QV_2018_2022.query.txt` (NOT shipped)
+
+Text lines written by `pull_oecd.py`: `url` (the SDMX query), `requested_utc`
+(time of the call, UTC), `http_status`, `content_type`, `bytes` (size of the
+response).
+
+### 10.3 `wdi_gdp_current_2018_2022.csv` (102 rows, one per sample country)
+
+Made by `fetch_wdi_gdp.py` from `api.worldbank.org`.
+
+| Column | Unit / meaning |
+|---|---|
+| `ISO3`, `country` | from `3-29-v2_oda_data.csv` |
+| `gdp_current_2018` … `gdp_current_2022` | WDI `NY.GDP.MKTP.CD`, GDP in current US dollars, that year. Unit: USD. Empty = no value |
+| `n_years_gdp` | number of years with a GDP value (0 to 5) |
+| `gdp_current_avg` | mean of the years with a value. USD |
+| `gdp_avg_snapshot` | `gdp_avg` of section 1.4. USD |
+| `rel_diff_vs_snapshot` | `gdp_current_avg / gdp_avg_snapshot - 1`. Unitless |
+
+### 10.4 `reproduce_current.csv` (18 rows)
+
+Made by `reproduce_current.py`. `item` (Table 1 row, or model, variant,
+outcome and term); `expected` (draft values, or the results file the model
+is checked against); `got` (our values); `match` (True / False).
+
+### 10.5 `pull_check_yearly.csv` and `pull_check.csv` (204 rows each: 102 countries x 2 donors)
+
+`pull_check_yearly.csv` is made by `build_gdp_constant.py`. `pull_check.csv`
+is the record of a first, stricter run that asked for bit-equal means and
+stopped; it has the same columns.
+
+| Column | Unit / meaning |
+|---|---|
+| `donor` | `USA` or `DAC` |
+| `iso3` | ISO3 code |
+| `old_mean` | `us_gross_mean` or `dac_gross_mean` of section 8.2. Constant 2024 USD millions |
+| `new_mean` | the same mean computed from the `Q` rows of the new pull (sum of 2018-2022 / 5) |
+| `abs_diff` | absolute difference of the two means |
+| `exact` | True if the two means are exactly equal |
+| `old_n_years`, `new_n_years` | number of years with a value in each source |
+
+### 10.6 `conversion_factors.csv` (5 rows, one per year)
+
+Made by `build_gdp_constant.py`, from the rows with recipient `DPGC`.
+
+| Column | Unit / meaning |
+|---|---|
+| `year` | 2018 to 2022 |
+| `Q_usa`, `V_usa` | US gross ODA to developing countries, constant 2024 (`Q`) and current (`V`) prices. USD millions |
+| `f_usa` | `Q_usa / V_usa`. Unitless |
+| `Q_dac`, `V_dac`, `f_dac` | the same for the DAC countries total |
+| `f_usa_recipient_min`, `_median`, `_max` | min, median and max of Q / V over the recipients with V > 0, US. Unitless |
+| `f_dac_recipient_min`, `_median`, `_max` | the same for the DAC countries total |
+
+### 10.7 `gdp_constant_2024.csv` (102 rows)
+
+Made by `build_gdp_constant.py`. Not used by the final method.
+
+| Column | Unit / meaning |
+|---|---|
+| `ISO3`, `country`, `gdp_current_2018` … `gdp_current_2022`, `n_years_gdp`, `gdp_current_avg` | as in section 10.3. USD |
+| `f_usa_2018` … `f_usa_2022` | `f_usa` of section 10.6 for that year |
+| `gdp_const_avg` | mean over the years with GDP of `gdp_current_t x f_usa_t`. Constant 2024 USD |
+| `gdp_avg_old` | `gdp_avg` of section 1.4. USD |
+| `f_dac_2018` … `f_dac_2022` | `f_dac` of section 10.6 for that year |
+| `gdp_const_avg_dac` | as `gdp_const_avg`, with `f_dac`. Constant 2024 USD |
+| `ratio_const_to_old` | `gdp_const_avg / gdp_avg_old`. Unitless |
+
+### 10.8 `oda_current_by_year.csv` (NOT shipped; 510 rows: 102 countries x 5 years)
+
+Made by `build_gdp_constant.py` from the `V` rows of the pull (section 10.1).
+Left out of the repository by `.gitignore`.
+
+| Column | Unit / meaning |
+|---|---|
+| `ISO3` | ISO3 code |
+| `year` | 2018 to 2022 |
+| `dac_gross_current` | DAC countries total gross ODA, current prices. USD millions |
+| `us_gross_current` | US gross ODA, current prices. USD millions. Empty in 5 rows (no US row that year); the ratio counts a missing aid year as 0 |
+
+### 10.9 `table1_old_new.csv` (8 rows) and `table1_final.csv` (6 rows)
+
+Table 1 aid / GDP rows. `table1_old_new.csv` (made by `compare_old_new.py`)
+has 4 versions per row; `table1_final.csv` (made by `final_current_ratio.py`)
+has 3. The final version is `final: current aid / current gdp per year, mean`.
+
+| Column | Unit / meaning |
+|---|---|
+| `variable` | `gross us oda / gdp, percent` or `gross dac oda / gdp, percent` |
+| `version` | how GDP and aid are combined: `old: current usd gdp`; `new: constant 2024 usd gdp, us factor` (named `first run primary: ...` in `table1_final.csv`); `cross-check 1: constant 2024 usd gdp, dac factor`; `cross-check 2: current aid / current gdp by year, mean`; `final: current aid / current gdp per year, mean` |
+| `N` | number of countries with a value |
+| `mean`, `s`, `min`, `max` | mean, sample standard deviation (ddof = 1), minimum, maximum. Percent |
+| `min_country`, `max_country` | ISO3 of the minimum and maximum (ties listed) |
+
+### 10.10 `ratio_changes.csv` (102 rows)
+
+Made by `compare_old_new.py`. `ISO3`, `country`, `n_years_gdp` (section
+10.3), then for `us_gdp` and for `dac_gdp` (prefix `us_gdp_` or `dac_gdp_`):
+
+| Column | Unit / meaning |
+|---|---|
+| `*_old_pct` | old ratio. Percent |
+| `*_new_pct` | aid / `gdp_const_avg` (US factor). Percent |
+| `*_dacf_pct` | aid / `gdp_const_avg_dac` (DAC factor). Percent |
+| `*_cur_pct` | current-price aid / current-price GDP per year, mean over the years with GDP. Percent. This is the final method |
+| `*_change_pp` | `*_new_pct - *_old_pct`. Percentage points |
+| `*_change_rel` | `*_new_pct / *_old_pct - 1`. Unitless |
+
+### 10.11 `models_old_new.csv` and `models_final.csv` (24 rows each)
+
+Every model that uses GDP: G7 (`gross_aid/run_gross_aid.py`) and the B3
+G8 / G9 models (`gross_aid/followup/run_followup.py`). One row per
+coefficient. `_old` = snapshot `gdp_avg`. `_new` = constant 2024 USD GDP,
+US factor, in `models_old_new.csv` (made by `compare_old_new.py`), and the
+final current-price ratio in `models_final.csv` (made by
+`final_current_ratio.py`; there `gdp_avg` and `log_gdp` are unchanged).
+
+| Column | Unit / meaning |
+|---|---|
+| `model` | `G7 days`, `G7 attention`, `G8`, `G9 log us_share`, `G9 ratio` |
+| `variant` | `net` or `gross` (G7); `B3 levels on the gdp sample` or `B3 aid / gdp` |
+| `outcome` | `log(1 + days)` or `log(1 + attention share), x1000` |
+| `term` | regressor: `log_disbursements`, `log_us_gross`, `log_dac_gross`, `log_pop`, `log_gdp`, `log_us_gdp`, `log_dac_gdp` or `log_us_share` |
+| `N_old`, `N_new` | number of countries in the model |
+| `beta_hat_old`, `beta_hat_new` | coefficient of `term`; times 1,000 for the attention outcome |
+| `se_type` | `HC3` |
+| `se_old`, `se_new` | standard error, same scale as `beta_hat` |
+| `p_old`, `p_new` | two-sided p-value |
+| `r2_old`, `r2_new` | R-squared of the model |
+| `changed` | `models_final.csv` only: True if any of N, beta_hat, se, p, r2 differs |
+| `sign_same` | True if `beta_hat_old` and `beta_hat_new` have the same sign |
+| `same_side_p0.05`, `same_side_p0.10` | True if both p-values are on the same side of 0.05 (0.10) |
+
+### 10.12 `crosscheck.csv` (2 rows, one per ratio)
+
+Made by `compare_old_new.py`. Relative differences are against the
+constant 2024 USD ratio with the US factor (`*_new_pct` of section 10.10).
+
+| Column | Unit / meaning |
+|---|---|
+| `variable` | as in section 10.9 |
+| `N` | countries with both values |
+| `dac_factor_rel_diff_median`, `_min`, `_max` | `*_dacf_pct / *_new_pct - 1`. Unitless |
+| `current_route_rel_diff_median`, `_min`, `_max` | `*_cur_pct / *_new_pct - 1`. Unitless |
+| `current_route_abs_rel_diff_median` | median of the absolute value of the above |
+| `current_route_rel_diff_min_country`, `_max_country` | ISO3 of the min and max |
+| `pearson_r_log_primary_vs_current` | Pearson r of ln(`*_new_pct`) and ln(`*_cur_pct`) |
+
+### 10.13 Text files
+
+`usage_map.md` (where `gdp_avg` is used in the repository);
+`report_tables.md` (made by `report_tables.py`); `REPORT.md` (report on the
+constant 2024 USD method and cross-checks); `final_tables.md` (made by
+`final_current_ratio.py`); `REPORT_final.md` (report on the final
+current-price method); `crosswalk_check.md` (read-only check of the blank
+FIPS cell of Aland in `country-codes.csv`).
